@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,9 +41,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             auth.signInWithEmailAndPassword(email, password)
+            auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-                    // Ekhane pore amra next screen e navigate korbo
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Login failed: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -59,6 +63,7 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            auth.createUserWithEmailAndPassword(email, password)
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Account created! You can login now.", Toast.LENGTH_SHORT).show()
