@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "704257374646",
+    "project_id": "scanlern",
+    "storage_bucket": "scanlern.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704257374646:android:b7796121297d03697aa917",
+        "android_client_info": {
+          "package_name": "com.nazmulislam.scanlern"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704257374646-sfjd730ip9rlldeobts7lbsdnorcl00f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD76g6hw4PrjOMF15vP2CWW6txIADDeRzU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704257374646-sfjd730ip9rlldeobts7lbsdnorcl00f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
