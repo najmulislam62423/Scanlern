@@ -39,7 +39,8 @@ class HomeActivity : AppCompatActivity() {
 
         // History button - porer step e history screen e niye jabe
         btnHistory.setOnClickListener {
-            // TODO: History screen e navigate korbo (porer feature)
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
         }
 
         // Logout button
