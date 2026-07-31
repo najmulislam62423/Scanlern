@@ -18,6 +18,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
+import android.content.Intent
 
 class ScanActivity : AppCompatActivity() {
 
@@ -122,8 +123,10 @@ class ScanActivity : AppCompatActivity() {
             recognizer.process(image)
                 .addOnSuccessListener { visionText ->
                     val extractedText = visionText.text
-                    Toast.makeText(this, "Text extracted!", Toast.LENGTH_SHORT).show()
-                    // TODO: Ei text ta porer step e display/AI-te pathabo
+                    val intent = Intent(this, ResultActivity::class.java)
+                    intent.putExtra("EXTRACTED_TEXT", extractedText)
+                    startActivity(intent)
+                    finish()
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Text recognition failed: ${e.message}", Toast.LENGTH_SHORT).show()
