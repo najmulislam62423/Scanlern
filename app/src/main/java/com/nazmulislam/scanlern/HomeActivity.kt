@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
+
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -32,7 +33,8 @@ class HomeActivity : AppCompatActivity() {
 
         // Scan button - porer step e OCR feature e niye jabe
         btnScan.setOnClickListener {
-            // TODO: OCR screen e navigate korbo (porer feature)
+            val intent = Intent(this, ScanActivity::class.java)
+            startActivity(intent)
         }
 
         // History button - porer step e history screen e niye jabe
