@@ -38,9 +38,15 @@ class HistoryActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = NoteAdapter(notesList) { note, position ->
-            showDeleteConfirmation(note, position)
-        }
+        adapter = NoteAdapter(
+            notes = notesList,
+            onDeleteClick = { note, position ->
+                showDeleteConfirmation(note, position)
+            },
+            onItemClick = { note ->
+                showEditDialog(note)
+            }
+        )
         recyclerView.adapter = adapter
 
         loadNotes()
@@ -116,5 +122,34 @@ class HistoryActivity : AppCompatActivity() {
             tvEmpty.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         }
+    }
+    private fun showEditDialog(note: Note) {
+        val editText = android.widget.EditText(this)
+        editText.setText(note.text)
+        editText.setPadding(40, 40, 40, 40)
+
+        AlertDialog.Builder(this)
+            .setTitle("Edit Note")
+            .setView(editText)
+            .setPositiveButton("Save") { _, _ ->
+                val updatedText = editText.text.toString().trim()
+                if (updatedText.isNotEmpty()) {
+                    updateNote(note, updatedText)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun updateNote(note: Note, newText: String) {
+        firestore.collection("notes").document(note.id)
+            .update("text", newText)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show()
+                loadNotes()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Update failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }

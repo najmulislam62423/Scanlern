@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class NoteAdapter(
     private val notes: MutableList<Note>,
-    private val onDeleteClick: (Note, Int) -> Unit
+    private val onDeleteClick: (Note, Int) -> Unit,
+    private val onItemClick: (Note) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,6 +32,10 @@ class NoteAdapter(
 
         holder.btnDeleteNote.setOnClickListener {
             onDeleteClick(note, position)
+        }
+
+        holder.itemView.setOnClickListener {
+            onItemClick(note)
         }
     }
 
