@@ -15,6 +15,17 @@
         android:textStyle="bold"
         android:textColor="@color/primary"
         android:layout_marginBottom="16dp" />
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search notes..."
+        android:inputType="text"
+        android:padding="12dp"
+        android:background="@color/surface_dark"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_secondary"
+        android:layout_marginBottom="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

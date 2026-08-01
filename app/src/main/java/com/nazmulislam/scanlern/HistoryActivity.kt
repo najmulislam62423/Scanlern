@@ -12,18 +12,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.widget.EditText
 
 class HistoryActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var tvEmpty: TextView
     private lateinit var btnBackHistory: Button
+    private lateinit var etSearch: EditText
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
     private val notesList = mutableListOf<Note>()
     private lateinit var adapter: NoteAdapter
+    private val allNotes = mutableListOf<Note>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +38,7 @@ class HistoryActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         tvEmpty = findViewById(R.id.tvEmpty)
         btnBackHistory = findViewById(R.id.btnBackHistory)
+        etSearch = findViewById(R.id.etSearch)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -48,6 +52,14 @@ class HistoryActivity : AppCompatActivity() {
             }
         )
         recyclerView.adapter = adapter
+
+        etSearch.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterNotes(s.toString())
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
 
         loadNotes()
 
@@ -69,7 +81,7 @@ class HistoryActivity : AppCompatActivity() {
             .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { result ->
-                notesList.clear()
+                allNotes.clear()
                 for (document in result) {
                     val note = Note(
                         id = document.id,
@@ -77,11 +89,14 @@ class HistoryActivity : AppCompatActivity() {
                         timestamp = document.getString("timestamp") ?: "",
                         userId = document.getString("userId") ?: ""
                     )
-                    notesList.add(note)
+                    allNotes.add(note)
                 }
 
                 notesList.reverse()
                 adapter.notifyDataSetChanged()
+                allNotes.reverse()
+                notesList.clear()
+                notesList.addAll(allNotes)
 
                 updateEmptyState()
             }
@@ -151,5 +166,16 @@ class HistoryActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Update failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+    private fun filterNotes(query: String) {
+        val filtered = if (query.isBlank()) {
+            allNotes
+        } else {
+            allNotes.filter { it.text.contains(query, ignoreCase = true) }
+        }
+        notesList.clear()
+        notesList.addAll(filtered)
+        adapter.notifyDataSetChanged()
+        updateEmptyState()
     }
 }
