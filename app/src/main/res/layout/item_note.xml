@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="12dp"
     android:layout_marginBottom="8dp"
-    android:background="#1E1E1E">
+    android:background="@color/surface_dark">
 
     <TextView
         android:id="@+id/tvNoteText"

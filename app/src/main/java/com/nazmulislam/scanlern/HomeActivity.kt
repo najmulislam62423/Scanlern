@@ -6,6 +6,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 
 
 class HomeActivity : AppCompatActivity() {
@@ -20,12 +23,18 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        MobileAds.initialize(this) {}
+
         auth = FirebaseAuth.getInstance()
 
         tvUserEmail = findViewById(R.id.tvUserEmail)
         btnScan = findViewById(R.id.btnScan)
         btnHistory = findViewById(R.id.btnHistory)
         btnLogout = findViewById(R.id.btnLogout)
+
+        val adView = findViewById<AdView>(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
 
         // Current logged-in user-er email dekhano
         val currentUser = auth.currentUser
