@@ -19,6 +19,8 @@ class ResultActivity : AppCompatActivity() {
     private lateinit var btnSave: Button
     private lateinit var btnBack: Button
     private lateinit var btnSummarize: Button
+
+    private lateinit var btnFlashcards: Button
     private lateinit var progressBar: ProgressBar
 
     private lateinit var auth: FirebaseAuth
@@ -35,6 +37,7 @@ class ResultActivity : AppCompatActivity() {
         btnSave = findViewById(R.id.btnSave)
         btnBack = findViewById(R.id.btnBack)
         btnSummarize = findViewById(R.id.btnSummarize)
+        btnFlashcards = findViewById(R.id.btnFlashcards)
         progressBar = findViewById(R.id.progressBar)
 
         val extractedText = intent.getStringExtra("EXTRACTED_TEXT") ?: "No text found"
@@ -72,6 +75,12 @@ class ResultActivity : AppCompatActivity() {
 
         btnSave.setOnClickListener {
             saveNoteToFirestore()
+        }
+        btnFlashcards.setOnClickListener {
+            val currentText = tvExtractedText.text.toString()
+            val intent = Intent(this, FlashcardActivity::class.java)
+            intent.putExtra("EXTRACTED_TEXT", currentText)
+            startActivity(intent)
         }
 
         btnBack.setOnClickListener {

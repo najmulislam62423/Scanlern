@@ -46,6 +46,14 @@
         android:text="Summarize with AI"
         android:backgroundTint="@color/primary"
         android:textColor="@color/white" />
+    <Button
+        android:id="@+id/btnFlashcards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Generate Flashcards"
+        android:backgroundTint="@color/accent_warning"
+        android:textColor="@color/black" />
 
     <Button
         android:id="@+id/btnSave"

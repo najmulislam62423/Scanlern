@@ -77,4 +77,35 @@ object GeminiHelper {
                 }
             })
     }
+    fun generateFlashcards(inputText: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
+        val prompt = """
+        Based on this text, create exactly 5 flashcards for studying.
+        Return ONLY a valid JSON array in this exact format, no extra text:
+        [{"question": "...", "answer": "..."}, {"question": "...", "answer": "..."}]
+        
+        Text: $inputText
+    """.trimIndent()
+
+        val request = GeminiRequest(
+            contents = listOf(Content(parts = listOf(Part(text = prompt))))
+        )
+
+        api.generateContent(BuildConfig.GEMINI_API_KEY, request)
+            .enqueue(object : Callback<GeminiResponse> {
+                override fun onResponse(call: Call<GeminiResponse>, response: Response<GeminiResponse>) {
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                            ?.candidates?.get(0)
+                            ?.content?.parts?.get(0)?.text
+                        onResult(result ?: "[]")
+                    } else {
+                        onError("API Error: ${response.errorBody()?.string()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<GeminiResponse>, t: Throwable) {
+                    onError("Network error: ${t.message}")
+                }
+            })
+    }
 }

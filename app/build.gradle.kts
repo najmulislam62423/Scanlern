@@ -65,4 +65,5 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.google.android.gms:play-services-ads:23.6.0")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("com.google.code.gson:gson:2.11.0")
 }
