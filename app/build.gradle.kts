@@ -64,4 +64,5 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.google.android.gms:play-services-ads:23.6.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
 }

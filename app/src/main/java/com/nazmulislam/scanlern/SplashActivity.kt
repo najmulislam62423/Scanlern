@@ -14,19 +14,25 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val auth = FirebaseAuth.getInstance()
-            val currentUser = auth.currentUser
+            val prefs = getSharedPreferences("ScanlernPrefs", MODE_PRIVATE)
+            val onboardingCompleted = prefs.getBoolean("onboarding_completed", false)
 
-            val intent = if (currentUser != null) {
-                // User already logged in, direct Home-e pathao
-                Intent(this, HomeActivity::class.java)
+            val intent = if (!onboardingCompleted) {
+                // Prothom bar, Onboarding dekhao
+                Intent(this, OnboardingActivity::class.java)
             } else {
-                // Login screen-e pathao
-                Intent(this, MainActivity::class.java)
+                val auth = FirebaseAuth.getInstance()
+                val currentUser = auth.currentUser
+
+                if (currentUser != null) {
+                    Intent(this, HomeActivity::class.java)
+                } else {
+                    Intent(this, MainActivity::class.java)
+                }
             }
 
             startActivity(intent)
             finish()
-        }, 2000) // 2000ms = 2 second
+        }, 2000)
     }
 }
