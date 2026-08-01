@@ -46,6 +46,15 @@
         android:layout_marginBottom="16dp" />
 
     <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:backgroundTint="@color/primary_light"
+        android:textColor="@color/black"
+        android:layout_marginBottom="16dp" />
+
+    <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

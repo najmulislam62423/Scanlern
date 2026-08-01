@@ -15,6 +15,8 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var tvUserEmail: TextView
+
+    private lateinit var btnSettings: Button
     private lateinit var btnScan: Button
     private lateinit var btnHistory: Button
     private lateinit var btnLogout: Button
@@ -31,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
         btnScan = findViewById(R.id.btnScan)
         btnHistory = findViewById(R.id.btnHistory)
         btnLogout = findViewById(R.id.btnLogout)
+        btnSettings = findViewById(R.id.btnSettings)
 
         val adView = findViewById<AdView>(R.id.adView)
         val adRequest = AdRequest.Builder().build()
@@ -51,7 +54,10 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, HistoryActivity::class.java)
             startActivity(intent)
         }
-
+        btnSettings.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
         // Logout button
         btnLogout.setOnClickListener {
             auth.signOut()
