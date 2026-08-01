@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,9 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
+    private val notesList = mutableListOf<Note>()
+    private lateinit var adapter: NoteAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
@@ -33,6 +37,11 @@ class HistoryActivity : AppCompatActivity() {
         btnBackHistory = findViewById(R.id.btnBackHistory)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        adapter = NoteAdapter(notesList) { note, position ->
+            showDeleteConfirmation(note, position)
+        }
+        recyclerView.adapter = adapter
 
         loadNotes()
 
@@ -54,7 +63,7 @@ class HistoryActivity : AppCompatActivity() {
             .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { result ->
-                val notesList = mutableListOf<Note>()
+                notesList.clear()
                 for (document in result) {
                     val note = Note(
                         id = document.id,
@@ -66,18 +75,46 @@ class HistoryActivity : AppCompatActivity() {
                 }
 
                 notesList.reverse()
+                adapter.notifyDataSetChanged()
 
-                if (notesList.isEmpty()) {
-                    tvEmpty.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
-                } else {
-                    tvEmpty.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
-                    recyclerView.adapter = NoteAdapter(notesList)
-                }
+                updateEmptyState()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Failed to load notes: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun showDeleteConfirmation(note: Note, position: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Note")
+            .setMessage("Are you sure you want to delete this note?")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteNote(note, position)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteNote(note: Note, position: Int) {
+        firestore.collection("notes").document(note.id)
+            .delete()
+            .addOnSuccessListener {
+                adapter.removeItem(position)
+                updateEmptyState()
+                Toast.makeText(this, "Note deleted", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun updateEmptyState() {
+        if (notesList.isEmpty()) {
+            tvEmpty.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        } else {
+            tvEmpty.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
     }
 }

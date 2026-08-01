@@ -1,28 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="12dp"
     android:layout_marginBottom="8dp"
-    android:background="@color/surface_dark">
+    android:background="@color/surface_dark"
+    android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tvNoteText"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Note text"
-        android:textSize="15sp"
-        android:maxLines="3"
-        android:ellipsize="end" />
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvNoteTimestamp"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvNoteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Note text"
+            android:textSize="15sp"
+            android:textColor="@color/text_primary"
+            android:maxLines="3"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/tvNoteTimestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Timestamp"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnDeleteNote"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Timestamp"
-        android:textSize="12sp"
-        android:textColor="#888888"
-        android:layout_marginTop="4dp" />
+        android:layout_marginStart="8dp"
+        android:src="@android:drawable/ic_menu_delete"
+        android:background="@android:color/transparent"
+        app:tint="@color/accent_error" />
 
 </LinearLayout>

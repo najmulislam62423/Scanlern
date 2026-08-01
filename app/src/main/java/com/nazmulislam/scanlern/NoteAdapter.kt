@@ -3,15 +3,19 @@ package com.nazmulislam.scanlern
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class NoteAdapter(private val notes: List<Note>) :
-    RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter(
+    private val notes: MutableList<Note>,
+    private val onDeleteClick: (Note, Int) -> Unit
+) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvNoteText: TextView = view.findViewById(R.id.tvNoteText)
         val tvNoteTimestamp: TextView = view.findViewById(R.id.tvNoteTimestamp)
+        val btnDeleteNote: ImageButton = view.findViewById(R.id.btnDeleteNote)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -24,7 +28,16 @@ class NoteAdapter(private val notes: List<Note>) :
         val note = notes[position]
         holder.tvNoteText.text = note.text
         holder.tvNoteTimestamp.text = note.timestamp
+
+        holder.btnDeleteNote.setOnClickListener {
+            onDeleteClick(note, position)
+        }
     }
 
     override fun getItemCount(): Int = notes.size
+
+    fun removeItem(position: Int) {
+        notes.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }
