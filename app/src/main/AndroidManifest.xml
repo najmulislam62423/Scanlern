@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -42,16 +43,13 @@
             android:name=".ResultActivity"
             android:exported="false" />
         <activity
-            android:name=".HistoryActivity"
-            android:exported="false" />
-        <activity
             android:name=".OnboardingActivity"
             android:exported="false" />
         <activity
             android:name=".FlashcardActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".EditNoteActivity"
             android:exported="false" />
     </application>
 

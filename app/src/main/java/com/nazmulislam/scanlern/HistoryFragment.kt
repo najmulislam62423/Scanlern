@@ -3,44 +3,39 @@ package com.nazmulislam.scanlern
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import android.widget.EditText
 
-class HistoryActivity : AppCompatActivity() {
+class HistoryFragment : Fragment(R.layout.fragment_history) {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var tvEmpty: TextView
-    private lateinit var btnBackHistory: Button
-    private lateinit var etSearch: EditText
+    private lateinit var etSearch: android.widget.EditText
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
     private val notesList = mutableListOf<Note>()
-    private lateinit var adapter: NoteAdapter
     private val allNotes = mutableListOf<Note>()
+    private lateinit var adapter: NoteAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_history)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        recyclerView = findViewById(R.id.recyclerView)
-        tvEmpty = findViewById(R.id.tvEmpty)
-        btnBackHistory = findViewById(R.id.btnBackHistory)
-        etSearch = findViewById(R.id.etSearch)
+        recyclerView = view.findViewById(R.id.recyclerView)
+        tvEmpty = view.findViewById(R.id.tvEmpty)
+        etSearch = view.findViewById(R.id.etSearch)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         adapter = NoteAdapter(
             notes = notesList,
@@ -48,7 +43,10 @@ class HistoryActivity : AppCompatActivity() {
                 showDeleteConfirmation(note, position)
             },
             onItemClick = { note ->
-                showEditDialog(note)
+                val intent = Intent(requireContext(), EditNoteActivity::class.java)
+                intent.putExtra("NOTE_ID", note.id)
+                intent.putExtra("NOTE_TEXT", note.text)
+                startActivity(intent)
             }
         )
         recyclerView.adapter = adapter
@@ -62,18 +60,17 @@ class HistoryActivity : AppCompatActivity() {
         })
 
         loadNotes()
+    }
 
-        btnBackHistory.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+    override fun onResume() {
+        super.onResume()
+        loadNotes()
     }
 
     private fun loadNotes() {
         val userId = auth.currentUser?.uid
         if (userId == null) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please login again", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -91,22 +88,31 @@ class HistoryActivity : AppCompatActivity() {
                     )
                     allNotes.add(note)
                 }
-
-                notesList.reverse()
-                adapter.notifyDataSetChanged()
                 allNotes.reverse()
                 notesList.clear()
                 notesList.addAll(allNotes)
-
+                adapter.notifyDataSetChanged()
                 updateEmptyState()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to load notes: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Failed to load notes: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
+    private fun filterNotes(query: String) {
+        val filtered = if (query.isBlank()) {
+            allNotes
+        } else {
+            allNotes.filter { it.text.contains(query, ignoreCase = true) }
+        }
+        notesList.clear()
+        notesList.addAll(filtered)
+        adapter.notifyDataSetChanged()
+        updateEmptyState()
+    }
+
     private fun showDeleteConfirmation(note: Note, position: Int) {
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(requireContext())
             .setTitle("Delete Note")
             .setMessage("Are you sure you want to delete this note?")
             .setPositiveButton("Delete") { _, _ ->
@@ -122,10 +128,10 @@ class HistoryActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 adapter.removeItem(position)
                 updateEmptyState()
-                Toast.makeText(this, "Note deleted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Note deleted", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -137,45 +143,5 @@ class HistoryActivity : AppCompatActivity() {
             tvEmpty.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         }
-    }
-    private fun showEditDialog(note: Note) {
-        val editText = android.widget.EditText(this)
-        editText.setText(note.text)
-        editText.setPadding(40, 40, 40, 40)
-
-        AlertDialog.Builder(this)
-            .setTitle("Edit Note")
-            .setView(editText)
-            .setPositiveButton("Save") { _, _ ->
-                val updatedText = editText.text.toString().trim()
-                if (updatedText.isNotEmpty()) {
-                    updateNote(note, updatedText)
-                }
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun updateNote(note: Note, newText: String) {
-        firestore.collection("notes").document(note.id)
-            .update("text", newText)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show()
-                loadNotes()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Update failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-    private fun filterNotes(query: String) {
-        val filtered = if (query.isBlank()) {
-            allNotes
-        } else {
-            allNotes.filter { it.text.contains(query, ignoreCase = true) }
-        }
-        notesList.clear()
-        notesList.addAll(filtered)
-        adapter.notifyDataSetChanged()
-        updateEmptyState()
     }
 }

@@ -7,5 +7,7 @@
         <item name="android:colorBackground">@color/background_dark</item>
         <item name="android:statusBarColor">@color/background_dark</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="android:fontFamily">@font/poppins_family</item>
+        <item name="fontFamily">@font/poppins_family</item>
     </style>
 </resources>

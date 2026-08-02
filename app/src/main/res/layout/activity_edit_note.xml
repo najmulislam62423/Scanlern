@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/background_dark"
+    tools:context=".EditNoteActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Note"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:layout_marginBottom="16dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/surface_dark"
+        android:padding="4dp">
+
+        <EditText
+            android:id="@+id/etEditNoteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:padding="16dp"
+            android:textSize="16sp"
+            android:background="@android:color/transparent"
+            android:textColor="@color/text_primary"
+            android:inputType="textMultiLine" />
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnSaveEditNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Save Changes"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btnCancelEditNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Cancel"
+        android:backgroundTint="@color/text_secondary"
+        android:textColor="@color/white" />
+
+</LinearLayout>
