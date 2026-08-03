@@ -1,5 +1,6 @@
 package com.nazmulislam.scanlern
 
+import android.R.attr.text
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -17,11 +18,10 @@ class ResultActivity : AppCompatActivity() {
 
     private lateinit var tvExtractedText: TextView
     private lateinit var btnSave: Button
-    private lateinit var btnBack: Button
-    private lateinit var btnSummarize: Button
-
-    private lateinit var btnFlashcards: Button
+    private lateinit var btnBack: View
+    private lateinit var btnSummarize: View
     private lateinit var progressBar: ProgressBar
+    private lateinit var btnFlashcards: View
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -47,15 +47,14 @@ class ResultActivity : AppCompatActivity() {
             val currentText = tvExtractedText.text.toString()
 
             progressBar.visibility = View.VISIBLE
-            btnSummarize.isEnabled = false
 
-            GeminiHelper.summarizeText(
+            GroqHelper.summarizeText(
                 inputText = currentText,
-                onResult = { summary ->
+                onResult = { jsonResult ->
                     runOnUiThread {
                         progressBar.visibility = View.GONE
                         btnSummarize.isEnabled = true
-                        tvExtractedText.text = summary
+                        tvExtractedText.text = jsonResult
                         Toast.makeText(this, "Summary generated!", Toast.LENGTH_SHORT).show()
                     }
                 },

@@ -59,7 +59,7 @@ object GeminiHelper {
             contents = listOf(Content(parts = listOf(Part(text = prompt))))
         )
 
-        api.generateContent(BuildConfig.GEMINI_API_KEY, request)
+        api.generateContent(BuildConfig.GROQ_API_KEY, request)
             .enqueue(object : Callback<GeminiResponse> {
                 override fun onResponse(call: Call<GeminiResponse>, response: Response<GeminiResponse>) {
                     if (response.isSuccessful) {
@@ -90,7 +90,7 @@ object GeminiHelper {
             contents = listOf(Content(parts = listOf(Part(text = prompt))))
         )
 
-        api.generateContent(BuildConfig.GEMINI_API_KEY, request)
+        api.generateContent(BuildConfig.GROQ_API_KEY, request)
             .enqueue(object : Callback<GeminiResponse> {
                 override fun onResponse(call: Call<GeminiResponse>, response: Response<GeminiResponse>) {
                     if (response.isSuccessful) {

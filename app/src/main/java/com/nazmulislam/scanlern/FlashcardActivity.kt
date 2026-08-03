@@ -3,7 +3,7 @@ package com.nazmulislam.scanlern
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
+import android.widget.TextView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,11 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+
 class FlashcardActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private lateinit var btnBackFlashcard: Button
+    private lateinit var btnBackFlashcard: TextView
+
+    private lateinit var tvCardCounter: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +28,7 @@ class FlashcardActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewFlashcards)
         progressBar = findViewById(R.id.progressBar)
         btnBackFlashcard = findViewById(R.id.btnBackFlashcard)
+        tvCardCounter = findViewById(R.id.tvCardCounter)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -40,7 +44,7 @@ class FlashcardActivity : AppCompatActivity() {
     private fun generateFlashcards(text: String) {
         progressBar.visibility = View.VISIBLE
 
-        GeminiHelper.generateFlashcards(
+        GroqHelper.generateFlashcards(
             inputText = text,
             onResult = { jsonResult ->
                 runOnUiThread {
@@ -59,6 +63,7 @@ class FlashcardActivity : AppCompatActivity() {
                             Toast.makeText(this, "No flashcards generated", Toast.LENGTH_SHORT).show()
                         } else {
                             recyclerView.adapter = FlashcardAdapter(flashcards)
+                            tvCardCounter.text = "Card 1 of ${flashcards.size}"
                         }
                     } catch (e: Exception) {
                         Toast.makeText(this, "Failed to parse flashcards: ${e.message}", Toast.LENGTH_LONG).show()

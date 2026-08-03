@@ -3,7 +3,6 @@ package com.nazmulislam.scanlern
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -20,9 +19,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         auth = FirebaseAuth.getInstance()
 
         val tvSettingsEmail = view.findViewById<TextView>(R.id.tvSettingsEmail)
-        val btnChangePassword = view.findViewById<Button>(R.id.btnChangePassword)
-        val btnDeleteAccount = view.findViewById<Button>(R.id.btnDeleteAccount)
-        val btnLogoutSettings = view.findViewById<Button>(R.id.btnLogoutSettings)
+        val btnChangePassword = view.findViewById<View>(R.id.btnChangePassword)
+        val btnDeleteAccount = view.findViewById<View>(R.id.btnDeleteAccount)
+        val btnLogoutSettings = view.findViewById<View>(R.id.btnLogoutSettings)
 
         tvSettingsEmail.text = auth.currentUser?.email ?: "Unknown"
 

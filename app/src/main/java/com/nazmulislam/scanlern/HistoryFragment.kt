@@ -16,6 +16,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var tvEmpty: TextView
+
+    private lateinit var emptyStateLayout: android.widget.LinearLayout
     private lateinit var etSearch: android.widget.EditText
 
     private lateinit var auth: FirebaseAuth
@@ -33,6 +35,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
 
         recyclerView = view.findViewById(R.id.recyclerView)
         tvEmpty = view.findViewById(R.id.tvEmpty)
+        emptyStateLayout = view.findViewById(R.id.emptyStateLayout)
         etSearch = view.findViewById(R.id.etSearch)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -137,10 +140,10 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
 
     private fun updateEmptyState() {
         if (notesList.isEmpty()) {
-            tvEmpty.visibility = View.VISIBLE
+            emptyStateLayout.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
         } else {
-            tvEmpty.visibility = View.GONE
+            emptyStateLayout.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         }
     }

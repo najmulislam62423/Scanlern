@@ -6,6 +6,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
 
+    private var backPressedOnce = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -34,6 +36,19 @@ class HomeActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+    override fun onBackPressed() {
+        if (backPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        backPressedOnce = true
+        android.widget.Toast.makeText(this, "Press back again to exit", android.widget.Toast.LENGTH_SHORT).show()
+
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            backPressedOnce = false
+        }, 2000)
     }
 
     private fun loadFragment(fragment: androidx.fragment.app.Fragment) {

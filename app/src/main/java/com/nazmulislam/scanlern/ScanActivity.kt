@@ -1,7 +1,8 @@
 package com.nazmulislam.scanlern
 
+import android.view.View
+
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -19,11 +20,13 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import android.content.Intent
+import android.widget.TextView
 
 class ScanActivity : AppCompatActivity() {
 
     private lateinit var previewView: PreviewView
-    private lateinit var btnCapture: Button
+    private lateinit var btnCapture: View
+    private lateinit var scanLine: View
     private var imageCapture: ImageCapture? = null
 
     private val cameraPermissionCode = 100
@@ -34,6 +37,10 @@ class ScanActivity : AppCompatActivity() {
 
         previewView = findViewById(R.id.previewView)
         btnCapture = findViewById(R.id.btnCapture)
+        scanLine = findViewById(R.id.scanLine)
+        val btnCloseScan = findViewById<TextView>(R.id.btnCloseScan)
+        btnCloseScan.setOnClickListener { finish() }
+        startScanLineAnimation()
 
         // Camera permission check kora
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
@@ -134,5 +141,12 @@ class ScanActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+    private fun startScanLineAnimation() {
+        val animator = android.animation.ObjectAnimator.ofFloat(scanLine, "translationY", 0f, 380f)
+        animator.duration = 1800
+        animator.repeatMode = android.animation.ValueAnimator.REVERSE
+        animator.repeatCount = android.animation.ValueAnimator.INFINITE
+        animator.start()
     }
 }

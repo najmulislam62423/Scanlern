@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="20dp"
-    android:layout_marginBottom="12dp"
-    android:background="@color/surface_dark">
+    android:layout_height="220dp"
+    android:layout_marginBottom="16dp">
 
-    <TextView
-        android:id="@+id/tvCardLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Question"
-        android:textSize="12sp"
-        android:textColor="@color/primary_light"
-        android:layout_marginBottom="12dp" />
-
-    <TextView
-        android:id="@+id/tvCardContent"
+    <LinearLayout
+        android:id="@+id/cardContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Card content here"
-        android:textSize="18sp"
-        android:textColor="@color/text_primary"
-        android:textAlignment="center" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp"
+        android:background="@drawable/bg_card_accent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tap to flip"
-        android:textSize="11sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginTop="16dp" />
+        <TextView
+            android:id="@+id/tvCardLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QUESTION"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.15"
+            android:textColor="#D6CBFF"
+            android:layout_marginBottom="14dp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvCardContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Card content here"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:maxLines="5"
+            android:ellipsize="end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="👆 Tap to flip"
+            android:textSize="11sp"
+            android:textColor="#B8ABE8"
+            android:layout_marginTop="14dp" />
+
+    </LinearLayout>
+
+</FrameLayout>
