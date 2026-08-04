@@ -23,6 +23,8 @@ class ResultActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var btnFlashcards: View
 
+    private lateinit var btnQuiz: View
+
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
@@ -38,7 +40,9 @@ class ResultActivity : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
         btnSummarize = findViewById(R.id.btnSummarize)
         btnFlashcards = findViewById(R.id.btnFlashcards)
+        btnQuiz = findViewById(R.id.btnQuiz)
         progressBar = findViewById(R.id.progressBar)
+
 
         val extractedText = intent.getStringExtra("EXTRACTED_TEXT") ?: "No text found"
         tvExtractedText.text = extractedText
@@ -122,5 +126,11 @@ class ResultActivity : AppCompatActivity() {
                 btnSave.isEnabled = true
                 Toast.makeText(this, "Save failed: ${e.message}", Toast.LENGTH_LONG).show()
             }
+        btnQuiz.setOnClickListener {
+            val currentText = tvExtractedText.text.toString()
+            val intent = Intent(this, QuizActivity::class.java)
+            intent.putExtra("EXTRACTED_TEXT", currentText)
+            startActivity(intent)
+        }
     }
 }

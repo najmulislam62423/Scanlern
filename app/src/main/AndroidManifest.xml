@@ -51,6 +51,9 @@
         <activity
             android:name=".EditNoteActivity"
             android:exported="false" />
+        <activity
+            android:name=".QuizActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

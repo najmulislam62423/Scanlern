@@ -21,9 +21,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val tvUserEmail = view.findViewById<TextView>(R.id.tvUserEmail)
         val tvTotalNotes = view.findViewById<TextView>(R.id.tvTotalNotes)
+        val tvStreakDays = view.findViewById<TextView>(R.id.tvStreakDays)
         val cardScan = view.findViewById<View>(R.id.cardScan)
         val cardHistory = view.findViewById<View>(R.id.cardHistory)
         val adView = view.findViewById<AdView>(R.id.adView)
+
 
         tvUserEmail.text = auth.currentUser?.email ?: ""
 
@@ -35,6 +37,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 .addOnSuccessListener { result ->
                     tvTotalNotes.text = result.size().toString()
                 }
+        }
+        StreakHelper.updateAndGetStreak { streak ->
+            tvStreakDays.text = streak.toString()
         }
 
         MobileAds.initialize(requireContext()) {}

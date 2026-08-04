@@ -76,4 +76,15 @@ object GroqHelper {
         """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+    fun generateQuiz(inputText: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
+        val prompt = """
+        Based on this text, create exactly 5 multiple-choice quiz questions.
+        Return ONLY a valid JSON array in this exact format, no extra text:
+        [{"question": "...", "options": ["A", "B", "C", "D"], "correctAnswer": 0}]
+        The correctAnswer field is the index (0-3) of the correct option in the options array.
+        
+        Text: $inputText
+    """.trimIndent()
+        callGroq(prompt, onResult, onError)
+    }
 }
