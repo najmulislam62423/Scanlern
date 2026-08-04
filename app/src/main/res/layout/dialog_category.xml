@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose a Category"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="16dp" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioGeneral"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="General"
+            android:textColor="@color/text_primary"
+            android:checked="true"
+            android:padding="8dp" />
+
+        <RadioButton
+            android:id="@+id/radioMath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Math"
+            android:textColor="@color/text_primary"
+            android:padding="8dp" />
+
+        <RadioButton
+            android:id="@+id/radioScience"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Science"
+            android:textColor="@color/text_primary"
+            android:padding="8dp" />
+
+        <RadioButton
+            android:id="@+id/radioLanguage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Language"
+            android:textColor="@color/text_primary"
+            android:padding="8dp" />
+
+        <RadioButton
+            android:id="@+id/radioHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="History/Social"
+            android:textColor="@color/text_primary"
+            android:padding="8dp" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnCategoryConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save with this Category"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

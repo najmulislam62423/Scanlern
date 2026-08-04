@@ -106,6 +106,31 @@ class ResultActivity : AppCompatActivity() {
             return
         }
 
+        showCategoryDialog(userId, noteText)
+    }
+
+    private fun showCategoryDialog(userId: String, noteText: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_category, null)
+        val radioGroup = dialogView.findViewById<android.widget.RadioGroup>(R.id.radioGroupCategory)
+        val btnConfirm = dialogView.findViewById<Button>(R.id.btnCategoryConfirm)
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        btnConfirm.setOnClickListener {
+            val selectedId = radioGroup.checkedRadioButtonId
+            val selectedRadio = dialogView.findViewById<android.widget.RadioButton>(selectedId)
+            val category = selectedRadio.text.toString()
+
+            dialog.dismiss()
+            actuallySaveNote(userId, noteText, category)
+        }
+
+        dialog.show()
+    }
+
+    private fun actuallySaveNote(userId: String, noteText: String, category: String) {
         btnSave.isEnabled = false
 
         val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(System.currentTimeMillis())
@@ -113,7 +138,8 @@ class ResultActivity : AppCompatActivity() {
         val note = hashMapOf(
             "text" to noteText,
             "timestamp" to timestamp,
-            "userId" to userId
+            "userId" to userId,
+            "category" to category
         )
 
         firestore.collection("notes")
@@ -126,11 +152,5 @@ class ResultActivity : AppCompatActivity() {
                 btnSave.isEnabled = true
                 Toast.makeText(this, "Save failed: ${e.message}", Toast.LENGTH_LONG).show()
             }
-        btnQuiz.setOnClickListener {
-            val currentText = tvExtractedText.text.toString()
-            val intent = Intent(this, QuizActivity::class.java)
-            intent.putExtra("EXTRACTED_TEXT", currentText)
-            startActivity(intent)
-        }
     }
 }

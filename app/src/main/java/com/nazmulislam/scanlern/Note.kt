@@ -4,5 +4,6 @@ data class Note(
     val id: String = "",
     val text: String = "",
     val timestamp: String = "",
-    val userId: String = ""
+    val userId: String = "",
+    val category: String = "General"
 )

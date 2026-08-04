@@ -87,7 +87,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
                         id = document.id,
                         text = document.getString("text") ?: "",
                         timestamp = document.getString("timestamp") ?: "",
-                        userId = document.getString("userId") ?: ""
+                        userId = document.getString("userId") ?: "",
+                        category = document.getString("category") ?: "General"
                     )
                     allNotes.add(note)
                 }
