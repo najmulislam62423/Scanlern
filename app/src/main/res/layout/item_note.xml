@@ -48,13 +48,6 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/btnDeleteNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:src="@android:drawable/ic_menu_delete"
-        android:background="@android:color/transparent"
-        app:tint="@color/accent_error" />
+
 
 </LinearLayout>

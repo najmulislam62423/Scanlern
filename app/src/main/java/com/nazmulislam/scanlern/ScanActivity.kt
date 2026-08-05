@@ -19,8 +19,11 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
-import android.content.Intent
 import android.widget.TextView
+
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
 
 class ScanActivity : AppCompatActivity() {
 
@@ -31,12 +34,15 @@ class ScanActivity : AppCompatActivity() {
 
     private val cameraPermissionCode = 100
 
+    private lateinit var btnGallery: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan)
 
         previewView = findViewById(R.id.previewView)
         btnCapture = findViewById(R.id.btnCapture)
+        btnGallery = findViewById(R.id.btnGallery)
         scanLine = findViewById(R.id.scanLine)
         val btnCloseScan = findViewById<TextView>(R.id.btnCloseScan)
         btnCloseScan.setOnClickListener { finish() }
@@ -54,6 +60,16 @@ class ScanActivity : AppCompatActivity() {
 
         btnCapture.setOnClickListener {
             captureAndRecognizeText()
+        }
+        btnGallery.setOnClickListener {
+            galleryLauncher.launch("image/*")
+        }
+    }
+    private val galleryLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            recognizeTextFromImage(it)
         }
     }
 
@@ -122,6 +138,26 @@ class ScanActivity : AppCompatActivity() {
         )
     }
 
+    private fun recognizeTextFromImage(uri: Uri) {
+        try {
+            val image = InputImage.fromFilePath(this, uri)
+            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+            recognizer.process(image)
+                .addOnSuccessListener { visionText ->
+                    val extractedText = visionText.text
+                    val intent = Intent(this, ResultActivity::class.java)
+                    intent.putExtra("EXTRACTED_TEXT", extractedText)
+                    startActivity(intent)
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Text recognition failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
     private fun recognizeTextFromImage(photoFile: File) {
         try {
             val image = InputImage.fromFilePath(this, android.net.Uri.fromFile(photoFile))

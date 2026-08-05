@@ -13,6 +13,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Locale
+import android.speech.tts.TextToSpeech
+
+import android.content.Context
+import android.graphics.pdf.PdfDocument
+import android.graphics.Paint
+import androidx.core.content.FileProvider
+import java.io.File
+import java.io.FileOutputStream
+
 
 class ResultActivity : AppCompatActivity() {
 
@@ -22,11 +31,13 @@ class ResultActivity : AppCompatActivity() {
     private lateinit var btnSummarize: View
     private lateinit var progressBar: ProgressBar
     private lateinit var btnFlashcards: View
-
     private lateinit var btnQuiz: View
-
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var btnListen: TextView
+    private var textToSpeech: TextToSpeech? = null
+    private var isSpeaking = false
+    private lateinit var btnShare: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +49,8 @@ class ResultActivity : AppCompatActivity() {
         tvExtractedText = findViewById(R.id.tvExtractedText)
         btnSave = findViewById(R.id.btnSave)
         btnBack = findViewById(R.id.btnBack)
+        btnListen = findViewById(R.id.btnListen)
+        btnShare = findViewById(R.id.btnShare)
         btnSummarize = findViewById(R.id.btnSummarize)
         btnFlashcards = findViewById(R.id.btnFlashcards)
         btnQuiz = findViewById(R.id.btnQuiz)
@@ -46,6 +59,7 @@ class ResultActivity : AppCompatActivity() {
 
         val extractedText = intent.getStringExtra("EXTRACTED_TEXT") ?: "No text found"
         tvExtractedText.text = extractedText
+
 
         btnSummarize.setOnClickListener {
             val currentText = tvExtractedText.text.toString()
@@ -85,11 +99,112 @@ class ResultActivity : AppCompatActivity() {
             intent.putExtra("EXTRACTED_TEXT", currentText)
             startActivity(intent)
         }
+        btnListen.setOnClickListener {
+            val textToRead = tvExtractedText.text.toString()
+            if (textToRead.isBlank()) {
+                Toast.makeText(this, "Nothing to read", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (isSpeaking) {
+                textToSpeech?.stop()
+                isSpeaking = false
+                btnListen.text = "🔊"
+            } else {
+                textToSpeech?.speak(textToRead, TextToSpeech.QUEUE_FLUSH, null, "noteRead")
+                isSpeaking = true
+                btnListen.text = "⏸️"
+            }
+        }
+        btnShare.setOnClickListener {
+            sharePdf()
+        }
 
         btnBack.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             finish()
+        }
+        textToSpeech = TextToSpeech(this) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech?.language = Locale.US
+            }
+        }
+    }
+    override fun onDestroy() {
+        textToSpeech?.stop()
+        textToSpeech?.shutdown()
+        super.onDestroy()
+    }
+    private fun sharePdf() {
+        val text = tvExtractedText.text.toString()
+        if (text.isBlank()) {
+            Toast.makeText(this, "Nothing to share", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            val pdfDocument = PdfDocument()
+            val paint = Paint()
+            val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+            var page = pdfDocument.startPage(pageInfo)
+            var canvas = page.canvas
+
+            paint.textSize = 14f
+            paint.color = android.graphics.Color.BLACK
+
+            val margin = 40f
+            var y = 60f
+            val maxWidth = 595 - (margin * 2)
+            val lineHeight = 20f
+
+            val words = text.split(" ")
+            var line = ""
+
+            for (word in words) {
+                val testLine = if (line.isEmpty()) word else "$line $word"
+                val lineWidth = paint.measureText(testLine)
+
+                if (lineWidth > maxWidth) {
+                    canvas.drawText(line, margin, y, paint)
+                    line = word
+                    y += lineHeight
+
+                    if (y > 800) {
+                        pdfDocument.finishPage(page)
+                        page = pdfDocument.startPage(pageInfo)
+                        canvas = page.canvas
+                        y = 60f
+                    }
+                } else {
+                    line = testLine
+                }
+            }
+            if (line.isNotEmpty()) {
+                canvas.drawText(line, margin, y, paint)
+            }
+
+            pdfDocument.finishPage(page)
+
+            val fileName = "Scanlern_Note_${System.currentTimeMillis()}.pdf"
+            val file = File(cacheDir, fileName)
+            pdfDocument.writeTo(FileOutputStream(file))
+            pdfDocument.close()
+
+            val uri = FileProvider.getUriForFile(
+                this,
+                "${packageName}.fileprovider",
+                file
+            )
+
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "application/pdf"
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(Intent.createChooser(shareIntent, "Share Note"))
+
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to create PDF: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 

@@ -82,6 +82,7 @@
         android:padding="32dp"
         android:orientation="vertical">
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -109,6 +110,17 @@
                 android:background="@drawable/circle_button_bg" />
 
         </FrameLayout>
+        <TextView
+            android:id="@+id/btnGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🖼️  Choose from Gallery"
+            android:textSize="13sp"
+            android:textColor="@color/primary_light"
+            android:padding="10dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true" />
 
     </LinearLayout>
 
