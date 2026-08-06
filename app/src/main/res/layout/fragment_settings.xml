@@ -24,20 +24,23 @@
 
         <!-- Profile Card -->
         <LinearLayout
+            android:id="@+id/profileCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/bg_card_accent"
             android:padding="20dp"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="24dp"
+            android:clickable="true"
+            android:focusable="true">
 
-            <TextView
+            <ImageView
+                android:id="@+id/ivSettingsPhoto"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:text="👤"
-                android:textSize="28sp"
-                android:gravity="center"
+                android:src="@android:drawable/sym_def_app_icon"
+                android:scaleType="centerCrop"
                 android:background="#33FFFFFF" />
 
             <LinearLayout
@@ -48,20 +51,21 @@
                 android:layout_marginStart="16dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvSettingsName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Account"
-                    android:textSize="12sp"
-                    android:textColor="#D6CBFF" />
+                    android:text="Your Name"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/tvSettingsEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="user@example.com"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white" />
+                    android:textSize="12sp"
+                    android:textColor="#D6CBFF" />
 
             </LinearLayout>
 

@@ -9,6 +9,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 
+import android.graphics.BitmapFactory
+import android.util.Base64
+import android.widget.ImageView
+
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private lateinit var auth: FirebaseAuth
@@ -24,6 +28,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val btnLogoutSettings = view.findViewById<View>(R.id.btnLogoutSettings)
 
         tvSettingsEmail.text = auth.currentUser?.email ?: "Unknown"
+        val tvSettingsName = view.findViewById<TextView>(R.id.tvSettingsName)
+        val ivSettingsPhoto = view.findViewById<ImageView>(R.id.ivSettingsPhoto)
+
+        loadProfileInfo(tvSettingsName, ivSettingsPhoto)
+        val profileCard = view.findViewById<View>(R.id.profileCard)
+        profileCard.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, ProfileFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
 
         btnChangePassword.setOnClickListener {
             sendPasswordResetEmail()
@@ -79,6 +95,31 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             }
             ?.addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Failed: ${e.message}. You may need to re-login before deleting.", Toast.LENGTH_LONG).show()
+            }
+    }
+    private fun loadProfileInfo(tvName: TextView, ivPhoto: ImageView) {
+        val userId = auth.currentUser?.uid ?: return
+        val firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+
+        firestore.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                val name = document.getString("name")
+                if (!name.isNullOrEmpty()) {
+                    tvName.text = name
+                } else {
+                    tvName.text = "Welcome!"
+                }
+
+                val photoBase64 = document.getString("photoBase64")
+                if (!photoBase64.isNullOrEmpty()) {
+                    try {
+                        val decodedBytes = Base64.decode(photoBase64, Base64.DEFAULT)
+                        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                        ivPhoto.setImageBitmap(bitmap)
+                    } catch (e: Exception) {
+                        // ignore
+                    }
+                }
             }
     }
 }
