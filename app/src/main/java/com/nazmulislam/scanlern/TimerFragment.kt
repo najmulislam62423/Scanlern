@@ -84,6 +84,7 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
 
     private fun switchMode() {
         if (isFocusMode) {
+            StudyGoalHelper.addStudyMinutes(25)
             isFocusMode = false
             timeLeftInMillis = breakDuration
             tvTimerMode.text = "BREAK TIME"

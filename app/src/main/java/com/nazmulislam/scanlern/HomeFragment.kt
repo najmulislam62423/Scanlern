@@ -10,6 +10,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.widget.ProgressBar
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -21,6 +22,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val tvUserEmail = view.findViewById<TextView>(R.id.tvUserEmail)
         val tvTotalNotes = view.findViewById<TextView>(R.id.tvTotalNotes)
+        val tvGoalProgress = view.findViewById<TextView>(R.id.tvGoalProgress)
+        val goalProgressBar = view.findViewById<ProgressBar>(R.id.goalProgressBar)
+
+        StudyGoalHelper.getTodayMinutes { minutes ->
+            val goal = StudyGoalHelper.DAILY_GOAL_MINUTES
+            val displayMinutes = minutes.coerceAtMost(goal)
+            tvGoalProgress.text = "$minutes/$goal min"
+            goalProgressBar.progress = ((displayMinutes.toFloat() / goal) * 100).toInt()
+        }
         val tvStreakDays = view.findViewById<TextView>(R.id.tvStreakDays)
         val cardScan = view.findViewById<View>(R.id.cardScan)
         val cardHistory = view.findViewById<View>(R.id.cardHistory)
