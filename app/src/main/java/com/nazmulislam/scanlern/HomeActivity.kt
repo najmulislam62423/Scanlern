@@ -29,8 +29,16 @@ class HomeActivity : AppCompatActivity() {
                     loadFragment(HistoryFragment())
                     true
                 }
+                R.id.nav_timer -> {
+                    loadFragment(TimerFragment())
+                    true
+                }
                 R.id.nav_settings -> {
                     loadFragment(SettingsFragment())
+                    true
+                }
+                R.id.nav_chat -> {
+                    loadFragment(ChatFragment())
                     true
                 }
                 else -> false

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@drawable/bg_gradient_main"
+    tools:context=".TimerFragment">
+
+    <TextView
+        android:id="@+id/tvTimerMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FOCUS TIME"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.15"
+        android:textColor="@color/primary_light"
+        android:layout_marginBottom="24dp" />
+
+    <FrameLayout
+        android:layout_width="260dp"
+        android:layout_height="260dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_button_border" />
+
+        <TextView
+            android:id="@+id/tvTimerCountdown"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="25:00"
+            android:textSize="52sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:gravity="center" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvSessionCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Session 1 of 4"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="40dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnTimerReset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Reset"
+            android:backgroundTint="@color/text_secondary"
+            android:textColor="@color/white"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnTimerStartPause"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

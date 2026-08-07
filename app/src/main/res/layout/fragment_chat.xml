@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_gradient_main"
+    tools:context=".ChatFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ask AI"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:padding="20dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="20dp"
+        android:clipToPadding="false" />
+
+    <ProgressBar
+        android:id="@+id/chatProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="20dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/etChatInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Ask any study question..."
+            android:padding="14dp"
+            android:background="@drawable/bg_card"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/btnSendChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="➤"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:background="@drawable/circle_button_bg"
+            android:padding="14dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

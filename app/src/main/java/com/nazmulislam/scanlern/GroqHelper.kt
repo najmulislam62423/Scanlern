@@ -87,4 +87,8 @@ object GroqHelper {
     """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+    fun askQuestion(question: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
+        val prompt = "You are a helpful study assistant for students. Answer this question clearly and simply, using short paragraphs or bullet points where helpful:\n\n$question"
+        callGroq(prompt, onResult, onError)
+    }
 }

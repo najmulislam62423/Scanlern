@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var tvSignup: TextView
+    private lateinit var tvForgotPassword: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword)
         btnLogin = findViewById(R.id.btnLogin)
         tvSignup = findViewById(R.id.tvSignup)
+        tvForgotPassword = findViewById(R.id.tvForgotPassword)
 
         // Login button click
         btnLogin.setOnClickListener {
@@ -71,6 +73,10 @@ class MainActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Signup failed: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
+        }
+        tvForgotPassword.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
         }
     }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="end"
+    android:layout_marginBottom="12dp">
+
+    <TextView
+        android:id="@+id/tvUserMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:text="User message"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_card_accent"
+        android:padding="14dp" />
+
+</LinearLayout>
