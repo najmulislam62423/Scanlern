@@ -31,6 +31,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val cardScan = view.findViewById<View>(R.id.cardScan)
         val cardHistory = view.findViewById<View>(R.id.cardHistory)
         val adView = view.findViewById<AdView>(R.id.adView)
+        val cardStudyPlan = view.findViewById<View>(R.id.cardStudyPlan)
+        val tvStudyPlanContent = view.findViewById<TextView>(R.id.tvStudyPlanContent)
 
         tvUserEmail.text = auth.currentUser?.email ?: ""
 
@@ -76,6 +78,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             tvStreakDays.text = streak.toString()
         }
 
+        // ---- Today's Study Plan ----
+        StudyPlanHelper.getActivePlan { plan ->
+            if (plan == null) {
+                tvStudyPlanContent.text = "No active study plan. Tap to create one!"
+            } else {
+                val todayDay = StudyPlanHelper.getTodayDayNumber(plan)
+                val todayTask = plan.tasks.find { it.day == todayDay }
+
+                if (todayTask != null) {
+                    tvStudyPlanContent.text = "${todayTask.topic} — ${todayTask.task}"
+                } else if (todayDay > plan.tasks.size) {
+                    tvStudyPlanContent.text = "Plan completed! Tap to create a new one."
+                } else {
+                    tvStudyPlanContent.text = "Tap to view your study plan"
+                }
+            }
+        }
+
         // ---- Ads ----
         MobileAds.initialize(requireContext()) {}
         val adRequest = AdRequest.Builder().build()
@@ -84,6 +104,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // ---- Click listeners ----
         cardScan.setOnClickListener {
             val intent = Intent(requireContext(), ScanActivity::class.java)
+            startActivity(intent)
+        }
+        cardStudyPlan.setOnClickListener {
+            val intent = Intent(requireContext(), StudyPlanActivity::class.java)
             startActivity(intent)
         }
 

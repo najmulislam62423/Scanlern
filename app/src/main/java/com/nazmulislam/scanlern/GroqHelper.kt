@@ -91,4 +91,24 @@ object GroqHelper {
         val prompt = "You are a helpful study assistant for students. Answer this question clearly and simply, using short paragraphs or bullet points where helpful:\n\n$question"
         callGroq(prompt, onResult, onError)
     }
+    fun generateStudyPlan(
+        examTitle: String,
+        daysUntilExam: Int,
+        topics: String,
+        onResult: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val prompt = """
+            A student has an exam called "$examTitle" in $daysUntilExam days.
+            Topics to cover: $topics
+            
+            Create a day-by-day study plan distributing these topics evenly across all $daysUntilExam days.
+            Return ONLY a valid JSON array in this exact format, no extra text, no markdown:
+            [{"day": 1, "topic": "...", "task": "..."}, {"day": 2, "topic": "...", "task": "..."}]
+            
+            Keep "topic" short (2-4 words) and "task" short (one actionable sentence, max 15 words).
+            Create exactly $daysUntilExam entries, one for each day.
+        """.trimIndent()
+        callGroq(prompt, onResult, onError)
+    }
 }

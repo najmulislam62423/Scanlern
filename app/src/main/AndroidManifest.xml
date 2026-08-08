@@ -50,6 +50,14 @@
             android:name=".FlashcardActivity"
             android:exported="false" />
         <activity
+            android:name=".StudyPlanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Scanlern" />
+        <activity
+            android:name=".ChatHistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Scanlern" />
+        <activity
             android:name=".EditNoteActivity"
             android:exported="false" />
         <activity
