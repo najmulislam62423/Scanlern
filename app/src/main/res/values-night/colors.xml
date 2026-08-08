@@ -7,11 +7,11 @@
     <color name="primary_dark">#5E35B1</color>
     <color name="primary_light">#B39DDB</color>
 
-    <color name="background_dark">#F5F3FA</color>
-    <color name="surface_dark">#FFFFFF</color>
+    <color name="background_dark">#121212</color>
+    <color name="surface_dark">#1E1E1E</color>
 
-    <color name="text_primary">#1A1A2E</color>
-    <color name="text_secondary">#6B6B80</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0B0B0</color>
 
     <color name="accent_success">#4CAF50</color>
     <color name="accent_error">#F44336</color>

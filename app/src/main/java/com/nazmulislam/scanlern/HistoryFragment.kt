@@ -50,6 +50,9 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
                 intent.putExtra("NOTE_ID", note.id)
                 intent.putExtra("NOTE_TEXT", note.text)
                 startActivity(intent)
+            },
+            onPinClick = { note, position ->
+                togglePin(note, position)
             }
         )
         recyclerView.adapter = adapter
@@ -88,11 +91,13 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
                         text = document.getString("text") ?: "",
                         timestamp = document.getString("timestamp") ?: "",
                         userId = document.getString("userId") ?: "",
-                        category = document.getString("category") ?: "General"
+                        category = document.getString("category") ?: "General",
+                        isPinned = document.getBoolean("isPinned") ?: false
                     )
                     allNotes.add(note)
                 }
                 allNotes.reverse()
+                allNotes.sortByDescending { it.isPinned }
                 notesList.clear()
                 notesList.addAll(allNotes)
                 adapter.notifyDataSetChanged()
@@ -147,5 +152,16 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
             emptyStateLayout.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         }
+    }
+    private fun togglePin(note: Note, position: Int) {
+        val newPinStatus = !note.isPinned
+        firestore.collection("notes").document(note.id)
+            .update("isPinned", newPinStatus)
+            .addOnSuccessListener {
+                loadNotes()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }

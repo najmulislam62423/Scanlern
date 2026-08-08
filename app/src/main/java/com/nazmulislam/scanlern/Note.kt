@@ -5,5 +5,6 @@ data class Note(
     val text: String = "",
     val timestamp: String = "",
     val userId: String = "",
-    val category: String = "General"
+    val category: String = "General",
+    val isPinned: Boolean = false
 )

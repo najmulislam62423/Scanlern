@@ -1,12 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.Scanlern" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/primary_light</item>
-        <item name="android:colorBackground">@color/background_dark</item>
-        <item name="android:statusBarColor">@color/background_dark</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorBackground">#F5F3FA</item>
+        <item name="android:statusBarColor">#F5F3FA</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:fontFamily">@font/poppins_family</item>
         <item name="fontFamily">@font/poppins_family</item>
     </style>

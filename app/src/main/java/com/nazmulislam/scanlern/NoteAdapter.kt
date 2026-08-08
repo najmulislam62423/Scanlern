@@ -9,13 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 class NoteAdapter(
     private val notes: MutableList<Note>,
     private val onDeleteClick: (Note, Int) -> Unit,
-    private val onItemClick: (Note) -> Unit
+    private val onItemClick: (Note) -> Unit,
+    private val onPinClick: (Note, Int) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvNoteText: TextView = view.findViewById(R.id.tvNoteText)
         val tvNoteTimestamp: TextView = view.findViewById(R.id.tvNoteTimestamp)
         val tvNoteCategory: TextView = view.findViewById(R.id.tvNoteCategory)
+        val btnPinNote: TextView = view.findViewById(R.id.btnPinNote)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -29,6 +31,7 @@ class NoteAdapter(
         holder.tvNoteText.text = note.text
         holder.tvNoteTimestamp.text = note.timestamp
         holder.tvNoteCategory.text = note.category
+        holder.btnPinNote.text = if (note.isPinned) "★" else "☆"
 
         holder.itemView.setOnClickListener {
             onItemClick(note)
@@ -37,6 +40,10 @@ class NoteAdapter(
         holder.itemView.setOnLongClickListener {
             onDeleteClick(note, holder.adapterPosition)
             true
+        }
+
+        holder.btnPinNote.setOnClickListener {
+            onPinClick(note, holder.adapterPosition)
         }
     }
 

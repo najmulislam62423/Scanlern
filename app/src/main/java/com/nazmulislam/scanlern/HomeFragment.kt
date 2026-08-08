@@ -19,27 +19,35 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val auth = FirebaseAuth.getInstance()
         val firestore = FirebaseFirestore.getInstance()
+        val userId = auth.currentUser?.uid   // ✅ সবার আগে declare
 
         val tvUserEmail = view.findViewById<TextView>(R.id.tvUserEmail)
         val tvTotalNotes = view.findViewById<TextView>(R.id.tvTotalNotes)
         val tvGoalProgress = view.findViewById<TextView>(R.id.tvGoalProgress)
         val goalProgressBar = view.findViewById<ProgressBar>(R.id.goalProgressBar)
+        val tvWeeklyMinutes = view.findViewById<TextView>(R.id.tvWeeklyMinutes)
+        val tvWeeklyNotes = view.findViewById<TextView>(R.id.tvWeeklyNotes)
+        val tvStreakDays = view.findViewById<TextView>(R.id.tvStreakDays)
+        val cardScan = view.findViewById<View>(R.id.cardScan)
+        val cardHistory = view.findViewById<View>(R.id.cardHistory)
+        val adView = view.findViewById<AdView>(R.id.adView)
 
+        tvUserEmail.text = auth.currentUser?.email ?: ""
+
+        // ---- Today's study goal ----
         StudyGoalHelper.getTodayMinutes { minutes ->
             val goal = StudyGoalHelper.DAILY_GOAL_MINUTES
             val displayMinutes = minutes.coerceAtMost(goal)
             tvGoalProgress.text = "$minutes/$goal min"
             goalProgressBar.progress = ((displayMinutes.toFloat() / goal) * 100).toInt()
         }
-        val tvStreakDays = view.findViewById<TextView>(R.id.tvStreakDays)
-        val cardScan = view.findViewById<View>(R.id.cardScan)
-        val cardHistory = view.findViewById<View>(R.id.cardHistory)
-        val adView = view.findViewById<AdView>(R.id.adView)
 
+        // ---- Weekly minutes ----
+        StudyGoalHelper.getWeeklyMinutes { totalMinutes ->
+            tvWeeklyMinutes.text = totalMinutes.toString()
+        }
 
-        tvUserEmail.text = auth.currentUser?.email ?: ""
-
-        val userId = auth.currentUser?.uid
+        // ---- Total notes ----
         if (userId != null) {
             firestore.collection("notes")
                 .whereEqualTo("userId", userId)
@@ -48,14 +56,32 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     tvTotalNotes.text = result.size().toString()
                 }
         }
+
+        // ---- Weekly notes (last 7 days) ----
+        if (userId != null) {
+            val weekAgo = java.util.Calendar.getInstance()
+            weekAgo.add(java.util.Calendar.DAY_OF_YEAR, -7)
+
+            firestore.collection("notes")
+                .whereEqualTo("userId", userId)
+                .whereGreaterThan("createdAt", weekAgo.time)
+                .get()
+                .addOnSuccessListener { result ->
+                    tvWeeklyNotes.text = result.size().toString()
+                }
+        }
+
+        // ---- Streak ----
         StreakHelper.updateAndGetStreak { streak ->
             tvStreakDays.text = streak.toString()
         }
 
+        // ---- Ads ----
         MobileAds.initialize(requireContext()) {}
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
 
+        // ---- Click listeners ----
         cardScan.setOnClickListener {
             val intent = Intent(requireContext(), ScanActivity::class.java)
             startActivity(intent)

@@ -41,4 +41,34 @@ object StudyGoalHelper {
                 onResult(0)
             }
     }
+    fun getWeeklyMinutes(onResult: (Int) -> Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val firestore = FirebaseFirestore.getInstance()
+        val calendar = java.util.Calendar.getInstance()
+
+        var totalMinutes = 0
+        var daysChecked = 0
+        val totalDays = 7
+
+        for (i in 0 until totalDays) {
+            val dateStr = dateFormat.format(calendar.time)
+            firestore.collection("users").document(userId)
+                .collection("studyLog").document(dateStr)
+                .get()
+                .addOnSuccessListener { document ->
+                    totalMinutes += document.getLong("minutes")?.toInt() ?: 0
+                    daysChecked++
+                    if (daysChecked == totalDays) {
+                        onResult(totalMinutes)
+                    }
+                }
+                .addOnFailureListener {
+                    daysChecked++
+                    if (daysChecked == totalDays) {
+                        onResult(totalMinutes)
+                    }
+                }
+            calendar.add(java.util.Calendar.DAY_OF_YEAR, -1)
+        }
+    }
 }
