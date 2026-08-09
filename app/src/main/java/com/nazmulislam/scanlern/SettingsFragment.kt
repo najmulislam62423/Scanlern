@@ -1,8 +1,11 @@
 package com.nazmulislam.scanlern
 
 import android.content.Intent
+import android.graphics.Outline
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -17,6 +20,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private lateinit var auth: FirebaseAuth
 
+    // ⚠️ এখানে তোমার নিজের সাপোর্ট email দিয়ে দাও
+    private val supportEmail = "your-support-email@gmail.com"
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -26,12 +32,24 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val btnChangePassword = view.findViewById<View>(R.id.btnChangePassword)
         val btnDeleteAccount = view.findViewById<View>(R.id.btnDeleteAccount)
         val btnLogoutSettings = view.findViewById<View>(R.id.btnLogoutSettings)
+        val btnShareApp = view.findViewById<View>(R.id.btnShareApp)
+        val btnSendFeedback = view.findViewById<View>(R.id.btnSendFeedback)
+        val btnAboutApp = view.findViewById<View>(R.id.btnAboutApp)
 
         tvSettingsEmail.text = auth.currentUser?.email ?: "Unknown"
         val tvSettingsName = view.findViewById<TextView>(R.id.tvSettingsName)
         val ivSettingsPhoto = view.findViewById<ImageView>(R.id.ivSettingsPhoto)
 
+        // প্রোফাইল ছবি গোল (circular) করার জন্য
+        ivSettingsPhoto.clipToOutline = true
+        ivSettingsPhoto.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setOval(0, 0, view.width, view.height)
+            }
+        }
+
         loadProfileInfo(tvSettingsName, ivSettingsPhoto)
+
         val profileCard = view.findViewById<View>(R.id.profileCard)
         profileCard.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
@@ -39,7 +57,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 .addToBackStack(null)
                 .commit()
         }
-
 
         btnChangePassword.setOnClickListener {
             sendPasswordResetEmail()
@@ -54,6 +71,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
+        }
+
+        btnShareApp.setOnClickListener {
+            shareApp()
+        }
+
+        btnSendFeedback.setOnClickListener {
+            sendFeedback()
+        }
+
+        btnAboutApp.setOnClickListener {
+            showAboutDialog()
         }
     }
 
@@ -97,6 +126,42 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 Toast.makeText(requireContext(), "Failed: ${e.message}. You may need to re-login before deleting.", Toast.LENGTH_LONG).show()
             }
     }
+
+    private fun shareApp() {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Scanlern - AI Study Assistant")
+        shareIntent.putExtra(
+            Intent.EXTRA_TEXT,
+            "Check out Scanlern — scan your notes, get AI summaries, flashcards, and quizzes instantly! 📚✨"
+        )
+        startActivity(Intent.createChooser(shareIntent, "Share Scanlern via"))
+    }
+
+    private fun sendFeedback() {
+        try {
+            val intent = Intent(Intent.ACTION_SENDTO)
+            intent.data = Uri.parse("mailto:")
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(supportEmail))
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Scanlern App Feedback")
+            startActivity(Intent.createChooser(intent, "Send Feedback"))
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "No email app found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showAboutDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("About Scanlern")
+            .setMessage(
+                "Scanlern v1.0\n\n" +
+                        "An AI-powered study assistant — scan your notes, get instant summaries, flashcards, and quizzes.\n\n" +
+                        "Made with ❤️ to help students study smarter."
+            )
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
     private fun loadProfileInfo(tvName: TextView, ivPhoto: ImageView) {
         val userId = auth.currentUser?.uid ?: return
         val firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance()

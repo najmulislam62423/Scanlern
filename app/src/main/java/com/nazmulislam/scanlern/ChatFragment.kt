@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.FrameLayout
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
@@ -20,7 +21,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var btnSendChat: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var btnChatHistory: ImageView
-    private lateinit var btnNewChat: TextView
+    private lateinit var btnNewChat: FrameLayout
 
     private val messages = mutableListOf<ChatMessage>()
     private lateinit var adapter: ChatAdapter

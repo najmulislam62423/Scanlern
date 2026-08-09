@@ -55,24 +55,10 @@ class MainActivity : AppCompatActivity() {
                 }
         }
 
-        // Signup text click - notun user register korar jonno
+        // Signup text click - notun Sign Up screen e niye jabe
         tvSignup.setOnClickListener {
-            val email = etEmail.text.toString().trim()
-            val password = etPassword.text.toString().trim()
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Email and password required", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            auth.createUserWithEmailAndPassword(email, password)
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Account created! You can login now.", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Signup failed: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+            val intent = Intent(this, SignupActivity::class.java)
+            startActivity(intent)
         }
         tvForgotPassword.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)

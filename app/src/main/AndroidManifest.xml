@@ -64,6 +64,10 @@
             android:name=".QuizActivity"
             android:exported="false" />
         <activity
+            android:name=".SignupActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Scanlern" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <provider

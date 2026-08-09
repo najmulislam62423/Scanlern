@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <!-- Header -->
         <TextView
             android:id="@+id/tvWelcome"
             android:layout_width="match_parent"
@@ -21,7 +22,7 @@
             android:textSize="26sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="8dp" />
 
         <TextView
             android:id="@+id/tvUserEmail"
@@ -30,7 +31,8 @@
             android:text="user@example.com"
             android:textSize="13sp"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="20dp" />
 
         <!-- Gradient Highlight Banner -->
         <LinearLayout
@@ -60,6 +62,7 @@
         </LinearLayout>
 
         <!-- Stats Row -->
+        <!-- Stats Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,27 +72,43 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:background="@drawable/bg_card"
-                android:padding="16dp"
-                android:layout_marginEnd="8dp">
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <FrameLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/circle_button_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="📚"
+                        android:textSize="13sp" />
+
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/tvTotalNotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/primary_light" />
+                    android:textColor="@color/primary_light"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="Notes Saved"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
 
             </LinearLayout>
 
@@ -99,15 +118,30 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:background="@drawable/bg_card"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:layout_marginStart="8dp">
+
+                <FrameLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/circle_button_bg"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="🔥"
+                        android:textSize="13sp" />
+
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/tvStreakDays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1"
-                    android:textSize="28sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/accent_warning" />
 
@@ -116,10 +150,111 @@
                     android:layout_height="wrap_content"
                     android:text="Day Streak"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="2dp" />
 
             </LinearLayout>
         </LinearLayout>
+
+        <!-- Quick Actions Grid -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quick Actions"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:id="@+id/cardScan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/bg_card"
+                android:padding="20dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:gravity="center"
+                    android:text="📷"
+                    android:textSize="26sp"
+                    android:background="@drawable/bg_card_accent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Scan Note"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Capture &amp; extract"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardHistory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/bg_card"
+                android:padding="20dp"
+                android:layout_marginStart="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:gravity="center"
+                    android:text="📚"
+                    android:textSize="26sp"
+                    android:background="@drawable/bg_card_accent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My Notes"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View saved notes"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="2dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Today's Study Goal -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -165,6 +300,7 @@
                 android:progressBackgroundTint="#2A2640" />
 
         </LinearLayout>
+
         <!-- Today's Study Plan -->
         <LinearLayout
             android:id="@+id/cardStudyPlan"
@@ -183,11 +319,26 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
+                <FrameLayout
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/circle_button_bg"
+                    android:layout_marginEnd="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="🗓️"
+                        android:textSize="15sp" />
+
+                </FrameLayout>
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="🗓️ Today's Study Plan"
+                    android:text="Today's Study Plan"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary" />
@@ -208,80 +359,12 @@
                 android:text="No active study plan. Tap to create one!"
                 android:textSize="13sp"
                 android:textColor="@color/text_secondary"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="48dp" />
 
         </LinearLayout>
 
-        <!-- Quick Actions -->
-
-        <!-- Quick Actions -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quick Actions"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginBottom="12dp" />
-
-        <LinearLayout
-            android:id="@+id/cardScan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_card"
-            android:padding="18dp"
-            android:layout_marginBottom="12dp"
-            android:clickable="true"
-            android:focusable="true">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="📷 Scan New Note"
-                android:textSize="16sp"
-                android:textColor="@color/text_primary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="→"
-                android:textSize="20sp"
-                android:textColor="@color/primary" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/cardHistory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_card"
-            android:padding="18dp"
-            android:layout_marginBottom="12dp"
-            android:clickable="true"
-            android:focusable="true">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="📚 View My Notes"
-                android:textSize="16sp"
-                android:textColor="@color/text_primary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="→"
-                android:textSize="20sp"
-                android:textColor="@color/primary" />
-
-        </LinearLayout>
-
+        <!-- This Week -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -364,7 +447,6 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="12dp" />
 
         <LinearLayout
