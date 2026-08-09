@@ -4,27 +4,36 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.fragment.app.Fragment
 import android.widget.ProgressBar
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+
+    private lateinit var tvGoalProgress: TextView
+    private lateinit var goalProgressBar: ProgressBar
+    private lateinit var tvStudyPlanContent: TextView
+    private lateinit var cardWeakTopics: View
+    private lateinit var tvWeakTopicsContent: TextView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val auth = FirebaseAuth.getInstance()
-        val firestore = FirebaseFirestore.getInstance()
-        val userId = auth.currentUser?.uid   // ✅ সবার আগে declare
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+        val userId = auth.currentUser?.uid
 
         val tvUserEmail = view.findViewById<TextView>(R.id.tvUserEmail)
         val tvTotalNotes = view.findViewById<TextView>(R.id.tvTotalNotes)
-        val tvGoalProgress = view.findViewById<TextView>(R.id.tvGoalProgress)
-        val goalProgressBar = view.findViewById<ProgressBar>(R.id.goalProgressBar)
+        tvGoalProgress = view.findViewById(R.id.tvGoalProgress)
+        goalProgressBar = view.findViewById(R.id.goalProgressBar)
         val tvWeeklyMinutes = view.findViewById<TextView>(R.id.tvWeeklyMinutes)
         val tvWeeklyNotes = view.findViewById<TextView>(R.id.tvWeeklyNotes)
         val tvStreakDays = view.findViewById<TextView>(R.id.tvStreakDays)
@@ -32,22 +41,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val cardHistory = view.findViewById<View>(R.id.cardHistory)
         val adView = view.findViewById<AdView>(R.id.adView)
         val cardStudyPlan = view.findViewById<View>(R.id.cardStudyPlan)
-        val tvStudyPlanContent = view.findViewById<TextView>(R.id.tvStudyPlanContent)
+        tvStudyPlanContent = view.findViewById(R.id.tvStudyPlanContent)
+        cardWeakTopics = view.findViewById(R.id.cardWeakTopics)
+        tvWeakTopicsContent = view.findViewById(R.id.tvWeakTopicsContent)
 
         tvUserEmail.text = auth.currentUser?.email ?: ""
-
-        // ---- Today's study goal ----
-        StudyGoalHelper.getTodayMinutes { minutes ->
-            val goal = StudyGoalHelper.DAILY_GOAL_MINUTES
-            val displayMinutes = minutes.coerceAtMost(goal)
-            tvGoalProgress.text = "$minutes/$goal min"
-            goalProgressBar.progress = ((displayMinutes.toFloat() / goal) * 100).toInt()
-        }
-
-        // ---- Weekly minutes ----
-        StudyGoalHelper.getWeeklyMinutes { totalMinutes ->
-            tvWeeklyMinutes.text = totalMinutes.toString()
-        }
 
         // ---- Total notes ----
         if (userId != null) {
@@ -78,6 +76,51 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             tvStreakDays.text = streak.toString()
         }
 
+        // ---- Ads ----
+        MobileAds.initialize(requireContext()) {}
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+
+        // ---- Click listeners ----
+        cardScan.setOnClickListener {
+            val intent = Intent(requireContext(), ScanActivity::class.java)
+            startActivity(intent)
+        }
+
+        cardHistory.setOnClickListener {
+            val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNav)
+            bottomNav.selectedItemId = R.id.nav_history
+        }
+
+        cardStudyPlan.setOnClickListener {
+            val intent = Intent(requireContext(), StudyPlanActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Home screen এ প্রথমবার আসার সময়ও data load করো
+        refreshDynamicData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // প্রতিবার Home tab এ ফিরে আসলে সর্বশেষ data দেখানোর জন্য
+        refreshDynamicData()
+    }
+
+    private fun refreshDynamicData() {
+        // ---- Today's study goal ----
+        StudyGoalHelper.getTodayMinutes { minutes ->
+            val goal = StudyGoalHelper.DAILY_GOAL_MINUTES
+            val displayMinutes = minutes.coerceAtMost(goal)
+            tvGoalProgress.text = "$minutes/$goal min"
+            goalProgressBar.progress = ((displayMinutes.toFloat() / goal) * 100).toInt()
+        }
+
+        // ---- Weekly minutes ----
+        StudyGoalHelper.getWeeklyMinutes { totalMinutes ->
+            view?.findViewById<TextView>(R.id.tvWeeklyMinutes)?.text = totalMinutes.toString()
+        }
+
         // ---- Today's Study Plan ----
         StudyPlanHelper.getActivePlan { plan ->
             if (plan == null) {
@@ -96,24 +139,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        // ---- Ads ----
-        MobileAds.initialize(requireContext()) {}
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
-
-        // ---- Click listeners ----
-        cardScan.setOnClickListener {
-            val intent = Intent(requireContext(), ScanActivity::class.java)
-            startActivity(intent)
-        }
-        cardStudyPlan.setOnClickListener {
-            val intent = Intent(requireContext(), StudyPlanActivity::class.java)
-            startActivity(intent)
-        }
-
-        cardHistory.setOnClickListener {
-            val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNav)
-            bottomNav.selectedItemId = R.id.nav_history
+        // ---- Weak Topics Insight ----
+        QuizResultHelper.getInsight { insightText ->
+            if (!insightText.isNullOrEmpty()) {
+                cardWeakTopics.visibility = View.VISIBLE
+                tvWeakTopicsContent.text = insightText
+            }
         }
     }
 }

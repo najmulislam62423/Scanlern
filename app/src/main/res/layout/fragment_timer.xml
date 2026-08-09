@@ -9,37 +9,97 @@
     android:background="@drawable/bg_gradient_main"
     tools:context=".TimerFragment">
 
+    <!-- Mode Badge -->
     <TextView
         android:id="@+id/tvTimerMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="FOCUS TIME"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textStyle="bold"
         android:letterSpacing="0.15"
-        android:textColor="@color/primary_light"
-        android:layout_marginBottom="24dp" />
+        android:textColor="@color/white"
+        android:background="@drawable/bg_card_accent"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:layout_marginBottom="32dp" />
 
+    <!-- Circular Progress -->
     <FrameLayout
         android:layout_width="260dp"
         android:layout_height="260dp">
 
-        <View
+        <com.nazmulislam.scanlern.CircularTimerView
+            android:id="@+id/circularTimerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/circle_button_border" />
+            android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/tvTimerCountdown"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="25:00"
-            android:textSize="52sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:gravity="center" />
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvTimerCountdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25:00"
+                android:textSize="52sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/tvTimerStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ready to focus"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
 
     </FrameLayout>
+
+    <!-- Session Dots -->
+    <LinearLayout
+        android:id="@+id/layoutSessionDots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="24dp">
+
+        <View
+            android:id="@+id/dot1"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle_button_bg" />
+
+        <View
+            android:id="@+id/dot2"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle_button_border" />
+
+        <View
+            android:id="@+id/dot3"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle_button_border" />
+
+        <View
+            android:id="@+id/dot4"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/circle_button_border" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvSessionCount"
@@ -48,9 +108,10 @@
         android:text="Session 1 of 4"
         android:textSize="13sp"
         android:textColor="@color/text_secondary"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="40dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="36dp" />
 
+    <!-- Controls -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,7 +123,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Reset"
+            android:text="↺  Reset"
             android:backgroundTint="@color/text_secondary"
             android:textColor="@color/white"
             android:layout_marginEnd="8dp" />
@@ -72,7 +133,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Start"
+            android:text="▶  Start"
             android:backgroundTint="@color/primary"
             android:textColor="@color/white"
             android:layout_marginStart="8dp" />

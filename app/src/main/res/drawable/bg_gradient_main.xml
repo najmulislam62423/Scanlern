@@ -1,9 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="#FFFFFF" />
-    <corners android:radius="16dp" />
-    <stroke
-        android:width="1dp"
-        android:color="#E5E0F5" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base soft gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#F5F3FF"
+                android:centerColor="#FAF9FF"
+                android:endColor="#FFFFFF"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Top-right purple glow -->
+    <item
+        android:top="-180dp"
+        android:right="-140dp"
+        android:width="360dp"
+        android:height="360dp"
+        android:gravity="top|right">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="180dp"
+                android:startColor="#337C4DFF"
+                android:endColor="#007C4DFF" />
+        </shape>
+    </item>
+
+    <!-- Bottom-left soft accent glow -->
+    <item
+        android:bottom="-200dp"
+        android:left="-160dp"
+        android:width="380dp"
+        android:height="380dp"
+        android:gravity="bottom|left">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="190dp"
+                android:startColor="#26B39DFF"
+                android:endColor="#00B39DFF" />
+        </shape>
+    </item>
+
+</layer-list>

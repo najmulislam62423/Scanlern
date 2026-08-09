@@ -99,6 +99,13 @@ class ResultActivity : AppCompatActivity() {
             intent.putExtra("EXTRACTED_TEXT", currentText)
             startActivity(intent)
         }
+
+        btnQuiz.setOnClickListener {
+            val currentText = tvExtractedText.text.toString()
+            val intent = Intent(this, QuizActivity::class.java)
+            intent.putExtra("EXTRACTED_TEXT", currentText)
+            startActivity(intent)
+        }
         btnListen.setOnClickListener {
             val textToRead = tvExtractedText.text.toString()
             if (textToRead.isBlank()) {

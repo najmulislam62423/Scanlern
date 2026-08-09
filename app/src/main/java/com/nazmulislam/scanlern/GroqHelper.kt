@@ -91,6 +91,18 @@ object GroqHelper {
         val prompt = "You are a helpful study assistant for students. Answer this question clearly and simply, using short paragraphs or bullet points where helpful:\n\n$question"
         callGroq(prompt, onResult, onError)
     }
+
+    fun analyzeWeakTopics(wrongQuestions: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
+        val prompt = """
+            A student got these quiz questions wrong:
+            $wrongQuestions
+            
+            Based on these questions, identify the 2-3 main topics/subjects the student is weak in.
+            Respond in ONE short friendly sentence (max 20 words) starting with "You're weak in" or similar, mentioning the topic names.
+            Do NOT list the questions back, just name the topics.
+        """.trimIndent()
+        callGroq(prompt, onResult, onError)
+    }
     fun generateStudyPlan(
         examTitle: String,
         daysUntilExam: Int,

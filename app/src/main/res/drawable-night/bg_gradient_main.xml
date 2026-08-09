@@ -1,9 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <gradient
-        android:startColor="#1A1025"
-        android:centerColor="#121212"
-        android:endColor="#0D0D0D"
-        android:angle="135" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base dark gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#14121F"
+                android:centerColor="#181529"
+                android:endColor="#0F0D18"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Top-right purple glow -->
+    <item
+        android:top="-180dp"
+        android:right="-140dp"
+        android:width="360dp"
+        android:height="360dp"
+        android:gravity="top|right">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="180dp"
+                android:startColor="#4D7C4DFF"
+                android:endColor="#007C4DFF" />
+        </shape>
+    </item>
+
+    <!-- Bottom-left teal accent glow -->
+    <item
+        android:bottom="-200dp"
+        android:left="-160dp"
+        android:width="380dp"
+        android:height="380dp"
+        android:gravity="bottom|left">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="190dp"
+                android:startColor="#3DB39DFF"
+                android:endColor="#00B39DFF" />
+        </shape>
+    </item>
+
+</layer-list>

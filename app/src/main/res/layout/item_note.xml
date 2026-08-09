@@ -6,7 +6,22 @@
     android:padding="16dp"
     android:layout_marginBottom="10dp"
     android:background="@drawable/bg_card"
-    android:gravity="center_vertical">
+    android:gravity="top">
+
+    <FrameLayout
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/circle_button_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="📝"
+            android:textSize="17sp" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -14,25 +29,17 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvNoteCategory"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/tvNoteCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="General"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:textColor="@color/primary_light"
-                android:background="@drawable/bg_card_accent"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="4dp" />
-
-        </LinearLayout>
+            android:text="General"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_light"
+            android:background="@drawable/bg_card_accent"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp" />
 
         <TextView
             android:id="@+id/tvNoteText"
@@ -49,7 +56,7 @@
             android:id="@+id/tvNoteTimestamp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Timestamp"
+            android:text="🕐  Timestamp"
             android:textSize="11sp"
             android:textColor="@color/text_secondary"
             android:layout_marginTop="6dp" />
@@ -58,12 +65,14 @@
 
     <TextView
         android:id="@+id/btnPinNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:text="☆"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:textColor="@color/text_secondary"
-        android:padding="8dp"
+        android:gravity="center"
+        android:background="@drawable/bg_card_accent"
+        android:layout_marginStart="8dp"
         android:clickable="true"
         android:focusable="true" />
 

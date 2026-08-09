@@ -26,6 +26,8 @@ class QuizActivity : AppCompatActivity() {
     private var score = 0
     private var answered = false
 
+    private val answerRecords = mutableListOf<QuizAnswerRecord>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
@@ -119,7 +121,7 @@ class QuizActivity : AppCompatActivity() {
             optionView.setOnClickListener {
                 if (!answered) {
                     answered = true
-                    checkAnswer(index, q.correctAnswer, optionsContainer)
+                    checkAnswer(index, q.correctAnswer, optionsContainer, q.question)
                     btnNextQuestion.isEnabled = true
                 }
             }
@@ -128,7 +130,7 @@ class QuizActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkAnswer(selectedIndex: Int, correctIndex: Int, container: LinearLayout) {
+    private fun checkAnswer(selectedIndex: Int, correctIndex: Int, container: LinearLayout, questionText: String) {
         for (i in 0 until container.childCount) {
             val child = container.getChildAt(i) as TextView
             when {
@@ -137,13 +139,40 @@ class QuizActivity : AppCompatActivity() {
             }
         }
 
-        if (selectedIndex == correctIndex) {
+        val isCorrect = selectedIndex == correctIndex
+        if (isCorrect) {
             score++
         }
+
+        answerRecords.add(QuizAnswerRecord(question = questionText, wasCorrect = isCorrect))
     }
 
     private fun showFinalScore() {
         Toast.makeText(this, "Quiz complete! Score: $score/${quizList.size}", Toast.LENGTH_LONG).show()
-        finish()
+
+        QuizResultHelper.saveQuizResult(score, quizList.size, answerRecords) {
+            // save সফল হওয়ার পরেই এখন weak topics analysis শুরু হচ্ছে
+            val wrongQuestions = answerRecords.filter { !it.wasCorrect }.map { it.question }
+            if (wrongQuestions.isNotEmpty()) {
+                QuizResultHelper.getRecentWrongAnswers { allWrong ->
+                    if (allWrong.isNotEmpty()) {
+                        GroqHelper.analyzeWeakTopics(
+                            wrongQuestions = allWrong.joinToString("\n"),
+                            onResult = { insight ->
+                                QuizResultHelper.saveInsight(insight)
+                                runOnUiThread { finish() }
+                            },
+                            onError = {
+                                runOnUiThread { finish() }
+                            }
+                        )
+                    } else {
+                        finish()
+                    }
+                }
+            } else {
+                finish()
+            }
+        }
     }
 }
