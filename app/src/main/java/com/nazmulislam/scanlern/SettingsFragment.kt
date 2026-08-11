@@ -156,7 +156,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             .setMessage(
                 "Scanlern v1.0\n\n" +
                         "An AI-powered study assistant — scan your notes, get instant summaries, flashcards, and quizzes.\n\n" +
-                        "Made with ❤️ to help students study smarter."
+                        "Made with AI to help students study smarter. Made By (NAZMUL ISLAM)"
             )
             .setPositiveButton("OK", null)
             .show()

@@ -103,6 +103,15 @@ object GroqHelper {
         """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+    fun explainText(selectedText: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
+        val prompt = """
+            A student selected this text from their notes and wants it explained simply:
+            "$selectedText"
+            
+            Explain this in very simple, easy-to-understand language, as if explaining to a beginner. Use short sentences or bullet points. Keep it concise (max 100 words).
+        """.trimIndent()
+        callGroq(prompt, onResult, onError)
+    }
     fun generateStudyPlan(
         examTitle: String,
         daysUntilExam: Int,

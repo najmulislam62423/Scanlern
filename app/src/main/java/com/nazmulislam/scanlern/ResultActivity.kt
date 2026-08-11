@@ -32,6 +32,8 @@ class ResultActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var btnFlashcards: View
     private lateinit var btnQuiz: View
+
+    private lateinit var btnExplainDoubt: View
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var btnListen: TextView
@@ -54,6 +56,7 @@ class ResultActivity : AppCompatActivity() {
         btnSummarize = findViewById(R.id.btnSummarize)
         btnFlashcards = findViewById(R.id.btnFlashcards)
         btnQuiz = findViewById(R.id.btnQuiz)
+        btnExplainDoubt = findViewById(R.id.btnExplainDoubt)
         progressBar = findViewById(R.id.progressBar)
 
 
@@ -105,6 +108,9 @@ class ResultActivity : AppCompatActivity() {
             val intent = Intent(this, QuizActivity::class.java)
             intent.putExtra("EXTRACTED_TEXT", currentText)
             startActivity(intent)
+        }
+        btnExplainDoubt.setOnClickListener {
+            explainSelectedText()
         }
         btnListen.setOnClickListener {
             val textToRead = tvExtractedText.text.toString()
@@ -274,5 +280,50 @@ class ResultActivity : AppCompatActivity() {
                 btnSave.isEnabled = true
                 Toast.makeText(this, "Save failed: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+    private fun explainSelectedText() {
+        val start = tvExtractedText.selectionStart
+        val end = tvExtractedText.selectionEnd
+
+        if (start < 0 || end < 0 || start == end) {
+            Toast.makeText(this, "প্রথমে টেক্সট থেকে কিছু অংশ select করো, তারপর চাপো", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val selectedText = tvExtractedText.text.subSequence(
+            minOf(start, end),
+            maxOf(start, end)
+        ).toString().trim()
+
+        if (selectedText.isEmpty()) {
+            Toast.makeText(this, "কিছু টেক্সট select করো", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        progressBar.visibility = View.VISIBLE
+
+        GroqHelper.explainText(
+            selectedText = selectedText,
+            onResult = { explanation ->
+                runOnUiThread {
+                    progressBar.visibility = View.GONE
+                    showExplanationDialog(explanation)
+                }
+            },
+            onError = { error ->
+                runOnUiThread {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(this, "Failed: $error", Toast.LENGTH_LONG).show()
+                }
+            }
+        )
+    }
+
+    private fun showExplanationDialog(explanation: String) {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("💡 Explanation")
+            .setMessage(explanation)
+            .setPositiveButton("Got it", null)
+            .show()
     }
 }

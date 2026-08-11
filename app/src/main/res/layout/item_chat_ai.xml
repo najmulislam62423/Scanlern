@@ -3,18 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="start"
-    android:layout_marginBottom="12dp">
+    android:gravity="bottom"
+    android:layout_marginBottom="14dp">
+
+    <FrameLayout
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/circle_button_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="✨"
+            android:textSize="13sp" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvAiMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
+        android:layout_weight="1"
         android:text="AI message"
         android:textSize="14sp"
+        android:lineSpacingExtra="2dp"
         android:textColor="@color/text_primary"
-        android:background="@drawable/bg_card"
-        android:padding="14dp" />
+        android:background="@drawable/bg_chat_ai"
+        android:padding="13dp" />
 
 </LinearLayout>
