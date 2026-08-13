@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:text="User message"
+        android:textIsSelectable="true"
         android:textSize="14sp"
         android:lineSpacingExtra="2dp"
         android:textColor="@color/white"

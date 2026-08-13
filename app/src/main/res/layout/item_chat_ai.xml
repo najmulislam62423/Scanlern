@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="AI message"
+        android:textIsSelectable="true"
         android:textSize="14sp"
         android:lineSpacingExtra="2dp"
         android:textColor="@color/text_primary"

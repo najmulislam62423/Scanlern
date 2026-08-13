@@ -3,7 +3,6 @@ package com.nazmulislam.scanlern
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
-import android.animation.AnimatorSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +10,20 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class FlashcardAdapter(private val flashcards: List<Flashcard>) :
-    RecyclerView.Adapter<FlashcardAdapter.FlashcardViewHolder>() {
+class FlashcardAdapter(
+    private val flashcards: List<Flashcard>,
+    private val showRatingButtons: Boolean = false,
+    private val onRate: ((Flashcard, Int) -> Unit)? = null
+) : RecyclerView.Adapter<FlashcardAdapter.FlashcardViewHolder>() {
 
     inner class FlashcardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val cardContainer: LinearLayout = view.findViewById(R.id.cardContainer)
         val tvCardLabel: TextView = view.findViewById(R.id.tvCardLabel)
         val tvCardContent: TextView = view.findViewById(R.id.tvCardContent)
+        val ratingRow: LinearLayout = view.findViewById(R.id.ratingRow)
+        val btnRateHard: TextView = view.findViewById(R.id.btnRateHard)
+        val btnRateMedium: TextView = view.findViewById(R.id.btnRateMedium)
+        val btnRateEasy: TextView = view.findViewById(R.id.btnRateEasy)
         var isShowingAnswer = false
         var isAnimating = false
     }
@@ -35,12 +41,17 @@ class FlashcardAdapter(private val flashcards: List<Flashcard>) :
         holder.tvCardContent.text = card.question
         holder.cardContainer.rotationY = 0f
         holder.cardContainer.setBackgroundResource(R.drawable.bg_card_accent)
+        holder.ratingRow.visibility = View.GONE
 
         holder.itemView.setOnClickListener {
             if (!holder.isAnimating) {
                 flipCard(holder, card)
             }
         }
+
+        holder.btnRateHard.setOnClickListener { onRate?.invoke(card, 0) }
+        holder.btnRateMedium.setOnClickListener { onRate?.invoke(card, 1) }
+        holder.btnRateEasy.setOnClickListener { onRate?.invoke(card, 2) }
     }
 
     private fun flipCard(holder: FlashcardViewHolder, card: Flashcard) {
@@ -58,10 +69,14 @@ class FlashcardAdapter(private val flashcards: List<Flashcard>) :
                     holder.tvCardLabel.text = "ANSWER"
                     holder.tvCardContent.text = card.answer
                     container.setBackgroundResource(R.drawable.bg_card)
+                    if (showRatingButtons) {
+                        holder.ratingRow.visibility = View.VISIBLE
+                    }
                 } else {
                     holder.tvCardLabel.text = "QUESTION"
                     holder.tvCardContent.text = card.question
                     container.setBackgroundResource(R.drawable.bg_card_accent)
+                    holder.ratingRow.visibility = View.GONE
                 }
 
                 val flipIn = ObjectAnimator.ofFloat(container, "rotationY", -90f, 0f)

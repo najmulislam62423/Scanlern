@@ -82,11 +82,56 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/layoutAttachedFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_card"
+        android:padding="10dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvAttachedFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="📎 filename.pdf"
+            android:textSize="12sp"
+            android:textColor="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/btnRemoveAttachment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✕"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:textColor="@color/text_secondary"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="16dp">
+
+        <TextView
+            android:id="@+id/btnAttachFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📎"
+            android:textSize="20sp"
+            android:padding="12dp"
+            android:layout_marginEnd="4dp"
+            android:clickable="true"
+            android:focusable="true" />
 
         <EditText
             android:id="@+id/etChatInput"

@@ -62,13 +62,14 @@ object GroqHelper {
     }
 
     fun summarizeText(inputText: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
-        val prompt = "Summarize this text in simple, easy to understand points for a student:\n\n$inputText"
+        val prompt = "Summarize this text in simple, easy to understand points for a student. IMPORTANT: Respond in the SAME language as the input text (if input is in Bangla, respond in Bangla; if English, respond in English; if mixed, respond in the dominant language):\n\n$inputText"
         callGroq(prompt, onResult, onError)
     }
 
     fun generateFlashcards(inputText: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
         val prompt = """
             Based on this text, create exactly 5 flashcards for studying.
+            IMPORTANT: Write the questions and answers in the SAME language as the input text below.
             Return ONLY a valid JSON array in this exact format, no extra text:
             [{"question": "...", "answer": "..."}, {"question": "...", "answer": "..."}]
             
@@ -76,9 +77,11 @@ object GroqHelper {
         """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+
     fun generateQuiz(inputText: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
         val prompt = """
         Based on this text, create exactly 5 multiple-choice quiz questions.
+        IMPORTANT: Write everything in the SAME language as the input text below.
         Return ONLY a valid JSON array in this exact format, no extra text:
         [{"question": "...", "options": ["A", "B", "C", "D"], "correctAnswer": 0}]
         The correctAnswer field is the index (0-3) of the correct option in the options array.
@@ -87,8 +90,28 @@ object GroqHelper {
     """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+
     fun askQuestion(question: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
-        val prompt = "You are a helpful study assistant for students. Answer this question clearly and simply, using short paragraphs or bullet points where helpful:\n\n$question"
+        val prompt = "You are a helpful study assistant for students. Answer this question clearly and simply, using short paragraphs or bullet points where helpful. IMPORTANT: Respond in the SAME language the student used to ask (Bangla or English):\n\n$question"
+        callGroq(prompt, onResult, onError)
+    }
+
+    fun askQuestionWithContext(
+        question: String,
+        context: String,
+        onResult: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val prompt = """
+            You are a helpful study assistant. The student has attached a document/image with this content:
+            ---
+            $context
+            ---
+            
+            Now answer the student's question about it clearly and simply, using short paragraphs or bullet points. IMPORTANT: Respond in the SAME language the student used to ask.
+            
+            Student's question: $question
+        """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
 
@@ -103,6 +126,7 @@ object GroqHelper {
         """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+
     fun explainText(selectedText: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
         val prompt = """
             A student selected this text from their notes and wants it explained simply:
@@ -112,6 +136,7 @@ object GroqHelper {
         """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+
     fun generateStudyPlan(
         examTitle: String,
         daysUntilExam: Int,
@@ -132,4 +157,5 @@ object GroqHelper {
         """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+
 }

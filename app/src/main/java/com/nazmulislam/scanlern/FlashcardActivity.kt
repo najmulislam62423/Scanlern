@@ -58,6 +58,7 @@ class FlashcardActivity : AppCompatActivity() {
 
                         val type = object : TypeToken<List<Flashcard>>() {}.type
                         val flashcards: List<Flashcard> = Gson().fromJson(cleanJson, type)
+                        FlashcardHelper.saveFlashcards(flashcards)
 
                         if (flashcards.isEmpty()) {
                             Toast.makeText(this, "No flashcards generated", Toast.LENGTH_SHORT).show()

@@ -22,6 +22,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var tvStudyPlanContent: TextView
     private lateinit var cardWeakTopics: View
     private lateinit var tvWeakTopicsContent: TextView
+    private lateinit var cardReviewDue: View
+    private lateinit var tvReviewDueCount: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,6 +46,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         tvStudyPlanContent = view.findViewById(R.id.tvStudyPlanContent)
         cardWeakTopics = view.findViewById(R.id.cardWeakTopics)
         tvWeakTopicsContent = view.findViewById(R.id.tvWeakTopicsContent)
+        cardReviewDue = view.findViewById(R.id.cardReviewDue)
+        tvReviewDueCount = view.findViewById(R.id.tvReviewDueCount)
 
         tvUserEmail.text = auth.currentUser?.email ?: ""
 
@@ -97,6 +101,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             startActivity(intent)
         }
 
+        cardReviewDue.setOnClickListener {
+            startActivity(Intent(requireContext(), ReviewFlashcardsActivity::class.java))
+        }
+
         // Home screen এ প্রথমবার আসার সময়ও data load করো
         refreshDynamicData()
     }
@@ -144,6 +152,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (!insightText.isNullOrEmpty()) {
                 cardWeakTopics.visibility = View.VISIBLE
                 tvWeakTopicsContent.text = insightText
+            }
+        }
+
+        // ---- Flashcards Due for Review ----
+        FlashcardHelper.getDueCount { count ->
+            if (count > 0) {
+                cardReviewDue.visibility = View.VISIBLE
+                tvReviewDueCount.text = "$count flashcard${if (count == 1) "" else "s"} to review"
+            } else {
+                cardReviewDue.visibility = View.GONE
             }
         }
     }

@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class OnboardingActivity : AppCompatActivity() {
 
@@ -36,6 +38,13 @@ class OnboardingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
+
+        val rootView = findViewById<android.view.View>(R.id.onboardingRoot)
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(0, 0, 0, systemBars.bottom)
+            insets
+        }
 
         prefs = getSharedPreferences("ScanlernPrefs", MODE_PRIVATE)
 
