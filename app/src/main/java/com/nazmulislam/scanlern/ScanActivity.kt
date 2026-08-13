@@ -145,7 +145,7 @@ class ScanActivity : AppCompatActivity() {
 
             recognizer.process(image)
                 .addOnSuccessListener { visionText ->
-                    val extractedText = visionText.text
+                    val extractedText = buildCleanText(visionText)
                     val intent = Intent(this, ResultActivity::class.java)
                     intent.putExtra("EXTRACTED_TEXT", extractedText)
                     startActivity(intent)
@@ -165,7 +165,7 @@ class ScanActivity : AppCompatActivity() {
 
             recognizer.process(image)
                 .addOnSuccessListener { visionText ->
-                    val extractedText = visionText.text
+                    val extractedText = buildCleanText(visionText)
                     val intent = Intent(this, ResultActivity::class.java)
                     intent.putExtra("EXTRACTED_TEXT", extractedText)
                     startActivity(intent)
@@ -184,5 +184,18 @@ class ScanActivity : AppCompatActivity() {
         animator.repeatMode = android.animation.ValueAnimator.REVERSE
         animator.repeatCount = android.animation.ValueAnimator.INFINITE
         animator.start()
+    }
+    private fun buildCleanText(visionText: com.google.mlkit.vision.text.Text): String {
+        val paragraphs = mutableListOf<String>()
+        for (block in visionText.textBlocks) {
+            val lines = block.lines.map { it.text.trim() }
+            // একটা block এর ভেতরের সব লাইন স্পেস দিয়ে জোড়া, newline দিয়ে না
+            val paragraphText = lines.joinToString(" ")
+            if (paragraphText.isNotBlank()) {
+                paragraphs.add(paragraphText)
+            }
+        }
+        // আলাদা block/paragraph এর মাঝে একটা ফাঁকা লাইন
+        return paragraphs.joinToString("\n\n")
     }
 }

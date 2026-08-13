@@ -13,6 +13,18 @@ object DocumentTextExtractor {
 
     private const val MAX_PDF_PAGES = 15
 
+    private fun buildCleanText(visionText: com.google.mlkit.vision.text.Text): String {
+        val paragraphs = mutableListOf<String>()
+        for (block in visionText.textBlocks) {
+            val lines = block.lines.map { it.text.trim() }
+            val paragraphText = lines.joinToString(" ")
+            if (paragraphText.isNotBlank()) {
+                paragraphs.add(paragraphText)
+            }
+        }
+        return paragraphs.joinToString("\n\n")
+    }
+
     fun extractFromImage(
         context: Context,
         uri: Uri,
@@ -23,7 +35,7 @@ object DocumentTextExtractor {
             val image = InputImage.fromFilePath(context, uri)
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
             recognizer.process(image)
-                .addOnSuccessListener { visionText -> onResult(visionText.text) }
+                .addOnSuccessListener { visionText -> onResult(buildCleanText(visionText)) }
                 .addOnFailureListener { e -> onError(e.message ?: "Failed to read image") }
         } catch (e: Exception) {
             onError(e.message ?: "Failed to read image")
@@ -67,7 +79,7 @@ object DocumentTextExtractor {
                 val image = InputImage.fromBitmap(bitmap, 0)
                 recognizer.process(image)
                     .addOnSuccessListener { visionText ->
-                        extractedParts.append(visionText.text).append("\n\n")
+                        extractedParts.append(buildCleanText(visionText)).append("\n\n")
                         processPage(index + 1)
                     }
                     .addOnFailureListener {
