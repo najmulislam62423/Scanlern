@@ -136,6 +136,63 @@ object GroqHelper {
         """.trimIndent()
         callGroq(prompt, onResult, onError)
     }
+    fun checkUnderstanding(
+        originalText: String,
+        studentExplanation: String,
+        onResult: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val prompt = """
+            Original study material:
+            "$originalText"
+            
+            A student explained this topic in their own words:
+            "$studentExplanation"
+            
+            Evaluate the student's understanding. Be encouraging but honest. Respond in this format:
+            1. Start with a short verdict: "✅ Great understanding!" OR "🟡 Partially correct" OR "❌ Needs more work"
+            2. Briefly say what they got right (1-2 sentences)
+            3. Briefly point out what's missing or incorrect, if anything (1-2 sentences)
+            
+            Keep the total response under 100 words. IMPORTANT: Respond in the SAME language the student used to explain.
+        """.trimIndent()
+        callGroq(prompt, onResult, onError)
+    }
+    fun generateMnemonic(inputText: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
+        val prompt = """
+            Based on this study material, find the most important list, sequence, or set of facts that would be hard to memorize:
+            "$inputText"
+            
+            Create ONE creative memory trick to help remember it — either:
+            - An acronym (first letters spell something memorable), OR
+            - A short funny rhyme or sentence, OR
+            - A vivid visual association
+            
+            Pick whichever fits best. Explain the trick clearly in 2-3 short sentences. If there's genuinely nothing list-like or hard to memorize in the text, say so briefly and suggest what to focus on instead.
+            
+            IMPORTANT: Respond in the SAME language as the input text.
+        """.trimIndent()
+        callGroq(prompt, onResult, onError)
+    }
+    fun generateQuickRecap(allNotesText: String, weakTopics: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
+        val prompt = """
+            A student has an exam very soon and needs a last-minute revision sheet.
+            
+            Here is a combination of their saved study notes:
+            "$allNotesText"
+            
+            ${if (weakTopics.isNotBlank()) "They are known to be weak in: $weakTopics" else ""}
+            
+            Create a compact "Quick Recap" sheet:
+            - Pick only the MOST important points a student must remember right before the exam
+            - Use short bullet points, not full paragraphs
+            - Prioritize topics they're weak in if mentioned
+            - Keep it under 200 words total — this must be scannable in under 2 minutes
+            
+            IMPORTANT: Respond in the SAME language as the input notes.
+        """.trimIndent()
+        callGroq(prompt, onResult, onError)
+    }
 
     fun generateStudyPlan(
         examTitle: String,

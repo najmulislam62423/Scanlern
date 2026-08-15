@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
+import java.io.File
 
 import android.graphics.BitmapFactory
 import android.util.Base64
@@ -21,7 +22,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private lateinit var auth: FirebaseAuth
 
     // ⚠️ এখানে তোমার নিজের সাপোর্ট email দিয়ে দাও
-    private val supportEmail = "your-support-email@gmail.com"
+    private val supportEmail = "najmulislam6242@gmail.com"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -128,14 +129,33 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     private fun shareApp() {
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "text/plain"
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Scanlern - AI Study Assistant")
-        shareIntent.putExtra(
-            Intent.EXTRA_TEXT,
-            "Check out Scanlern — scan your notes, get AI summaries, flashcards, and quizzes instantly! 📚✨"
-        )
-        startActivity(Intent.createChooser(shareIntent, "Share Scanlern via"))
+        try {
+            val context = requireContext()
+            val sourceApk = File(context.applicationInfo.sourceDir)
+            val apkCopy = File(context.cacheDir, "Scanlern.apk")
+
+            // চলমান app এর APK নিজের cache folder এ copy করা (FileProvider দিয়ে share করার জন্য)
+            sourceApk.copyTo(apkCopy, overwrite = true)
+
+            val uri = androidx.core.content.FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                apkCopy
+            )
+
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "application/vnd.android.package-archive"
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+            shareIntent.putExtra(
+                Intent.EXTRA_TEXT,
+                "Check out Scanlern — an AI-powered study assistant! Install this APK to try it out. 📚✨"
+            )
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            startActivity(Intent.createChooser(shareIntent, "Share Scanlern via"))
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Failed to share app: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun sendFeedback() {

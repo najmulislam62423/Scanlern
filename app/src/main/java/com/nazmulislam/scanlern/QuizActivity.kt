@@ -121,7 +121,7 @@ class QuizActivity : AppCompatActivity() {
             optionView.setOnClickListener {
                 if (!answered) {
                     answered = true
-                    checkAnswer(index, q.correctAnswer, optionsContainer, q.question)
+                    checkAnswer(index, q.correctAnswer, optionsContainer, q)
                     btnNextQuestion.isEnabled = true
                 }
             }
@@ -130,7 +130,7 @@ class QuizActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkAnswer(selectedIndex: Int, correctIndex: Int, container: LinearLayout, questionText: String) {
+    private fun checkAnswer(selectedIndex: Int, correctIndex: Int, container: LinearLayout, question: QuizQuestion) {
         for (i in 0 until container.childCount) {
             val child = container.getChildAt(i) as TextView
             when {
@@ -142,9 +142,12 @@ class QuizActivity : AppCompatActivity() {
         val isCorrect = selectedIndex == correctIndex
         if (isCorrect) {
             score++
+            MistakeHelper.removeMistakeByQuestionText(question.question)
+        } else {
+            MistakeHelper.addMistake(question)
         }
 
-        answerRecords.add(QuizAnswerRecord(question = questionText, wasCorrect = isCorrect))
+        answerRecords.add(QuizAnswerRecord(question = question.question, wasCorrect = isCorrect))
     }
 
     private fun showFinalScore() {

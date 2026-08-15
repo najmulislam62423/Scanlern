@@ -32,8 +32,10 @@ class ResultActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var btnFlashcards: View
     private lateinit var btnQuiz: View
-
     private lateinit var btnExplainDoubt: View
+    private lateinit var btnCheckUnderstanding: View
+
+    private lateinit var btnMnemonic: View
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var btnListen: TextView
@@ -57,6 +59,8 @@ class ResultActivity : AppCompatActivity() {
         btnFlashcards = findViewById(R.id.btnFlashcards)
         btnQuiz = findViewById(R.id.btnQuiz)
         btnExplainDoubt = findViewById(R.id.btnExplainDoubt)
+        btnCheckUnderstanding = findViewById(R.id.btnCheckUnderstanding)
+        btnMnemonic = findViewById(R.id.btnMnemonic)
         progressBar = findViewById(R.id.progressBar)
 
 
@@ -111,6 +115,12 @@ class ResultActivity : AppCompatActivity() {
         }
         btnExplainDoubt.setOnClickListener {
             explainSelectedText()
+        }
+        btnCheckUnderstanding.setOnClickListener {
+            showUnderstandingCheckDialog()
+        }
+        btnMnemonic.setOnClickListener {
+            generateMnemonicTrick()
         }
         btnListen.setOnClickListener {
             val textToRead = tvExtractedText.text.toString()
@@ -281,6 +291,35 @@ class ResultActivity : AppCompatActivity() {
                 Toast.makeText(this, "Save failed: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
+    private fun generateMnemonicTrick() {
+        val currentText = tvExtractedText.text.toString()
+        if (currentText.isBlank()) {
+            Toast.makeText(this, "Nothing to create a memory trick from", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        progressBar.visibility = View.VISIBLE
+
+        GroqHelper.generateMnemonic(
+            inputText = currentText,
+            onResult = { trick ->
+                runOnUiThread {
+                    progressBar.visibility = View.GONE
+                    androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("🧠 Memory Trick")
+                        .setMessage(trick)
+                        .setPositiveButton("Got it", null)
+                        .show()
+                }
+            },
+            onError = { error ->
+                runOnUiThread {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(this, "Failed: $error", Toast.LENGTH_LONG).show()
+                }
+            }
+        )
+    }
     private fun explainSelectedText() {
         val start = tvExtractedText.selectionStart
         val end = tvExtractedText.selectionEnd
@@ -325,5 +364,56 @@ class ResultActivity : AppCompatActivity() {
             .setMessage(explanation)
             .setPositiveButton("Got it", null)
             .show()
+    }private fun showUnderstandingCheckDialog() {
+        val originalText = tvExtractedText.text.toString()
+        if (originalText.isBlank()) {
+            Toast.makeText(this, "Nothing to check understanding on", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_understanding_check, null)
+        val etInput = dialogView.findViewById<android.widget.EditText>(R.id.etUnderstandingInput)
+        val progressBar = dialogView.findViewById<ProgressBar>(R.id.understandingProgressBar)
+        val tvResult = dialogView.findViewById<TextView>(R.id.tvUnderstandingResult)
+        val btnSubmit = dialogView.findViewById<Button>(R.id.btnSubmitUnderstanding)
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setNegativeButton("Close", null)
+            .create()
+
+        btnSubmit.setOnClickListener {
+            val studentExplanation = etInput.text.toString().trim()
+            if (studentExplanation.isEmpty()) {
+                Toast.makeText(this, "Write your explanation first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            progressBar.visibility = View.VISIBLE
+            tvResult.visibility = View.GONE
+            btnSubmit.isEnabled = false
+
+            GroqHelper.checkUnderstanding(
+                originalText = originalText,
+                studentExplanation = studentExplanation,
+                onResult = { feedback ->
+                    runOnUiThread {
+                        progressBar.visibility = View.GONE
+                        btnSubmit.isEnabled = true
+                        tvResult.visibility = View.VISIBLE
+                        tvResult.text = feedback
+                    }
+                },
+                onError = { error ->
+                    runOnUiThread {
+                        progressBar.visibility = View.GONE
+                        btnSubmit.isEnabled = true
+                        Toast.makeText(this, "Failed: $error", Toast.LENGTH_LONG).show()
+                    }
+                }
+            )
+        }
+
+        dialog.show()
     }
 }

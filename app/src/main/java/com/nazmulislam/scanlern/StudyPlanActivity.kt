@@ -21,6 +21,8 @@ class StudyPlanActivity : AppCompatActivity() {
     private lateinit var layoutPlanResult: LinearLayout
     private lateinit var tvPlanTitle: TextView
     private lateinit var layoutTaskList: LinearLayout
+
+    private lateinit var btnQuickRecap: View
     private lateinit var btnBack: View
 
     private lateinit var btnNewPlan: View
@@ -40,6 +42,7 @@ class StudyPlanActivity : AppCompatActivity() {
         layoutTaskList = findViewById(R.id.layoutTaskList)
         btnBack = findViewById(R.id.btnBack)
         btnNewPlan = findViewById(R.id.btnNewPlan)
+        btnQuickRecap = findViewById(R.id.btnQuickRecap)
 
         btnBack.setOnClickListener { finish() }
 
@@ -50,6 +53,9 @@ class StudyPlanActivity : AppCompatActivity() {
             etTopics.text.clear()
             layoutPlanResult.visibility = View.GONE
             layoutInputForm.visibility = View.VISIBLE
+        }
+        btnQuickRecap.setOnClickListener {
+            generateRecap()
         }
 
         btnGeneratePlan.setOnClickListener {
@@ -170,5 +176,68 @@ class StudyPlanActivity : AppCompatActivity() {
 
             layoutTaskList.addView(taskView)
         }
+    }
+    private fun generateRecap() {
+        val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        progressBar.visibility = android.view.View.VISIBLE
+        btnQuickRecap.isEnabled = false
+
+        val firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+        firestore.collection("notes")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { result ->
+                if (result.isEmpty) {
+                    progressBar.visibility = android.view.View.GONE
+                    btnQuickRecap.isEnabled = true
+                    Toast.makeText(this, "No saved notes found to recap", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+
+                // সব note এর টেক্সট একসাথে জোড়া, খুব বেশি বড় হলে ছেঁটে ফেলা (AI prompt limit এর জন্য)
+                val allNotesText = result.documents
+                    .mapNotNull { it.getString("text") }
+                    .joinToString("\n\n")
+                    .take(6000)
+
+                QuizResultHelper.getInsight { weakTopics ->
+                    GroqHelper.generateQuickRecap(
+                        allNotesText = allNotesText,
+                        weakTopics = weakTopics ?: "",
+                        onResult = { recap ->
+                            runOnUiThread {
+                                progressBar.visibility = android.view.View.GONE
+                                btnQuickRecap.isEnabled = true
+                                showRecapDialog(recap)
+                            }
+                        },
+                        onError = { error ->
+                            runOnUiThread {
+                                progressBar.visibility = android.view.View.GONE
+                                btnQuickRecap.isEnabled = true
+                                Toast.makeText(this, "Failed: $error", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    )
+                }
+            }
+            .addOnFailureListener { e ->
+                progressBar.visibility = android.view.View.GONE
+                btnQuickRecap.isEnabled = true
+                Toast.makeText(this, "Failed to load notes: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun showRecapDialog(recap: String) {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("⚡ Quick Recap")
+            .setMessage(recap)
+            .setPositiveButton("Got it", null)
+            .show()
     }
 }

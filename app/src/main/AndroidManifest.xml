@@ -74,6 +74,10 @@
             android:exported="false"
             android:theme="@style/Theme.Scanlern" />
         <activity
+            android:name=".MistakeQuizActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Scanlern" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <provider

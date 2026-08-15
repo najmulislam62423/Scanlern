@@ -24,6 +24,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var tvWeakTopicsContent: TextView
     private lateinit var cardReviewDue: View
     private lateinit var tvReviewDueCount: TextView
+    private lateinit var cardMistakes: View
+    private lateinit var tvMistakeCount: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,6 +49,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         cardWeakTopics = view.findViewById(R.id.cardWeakTopics)
         tvWeakTopicsContent = view.findViewById(R.id.tvWeakTopicsContent)
         cardReviewDue = view.findViewById(R.id.cardReviewDue)
+        cardMistakes = view.findViewById(R.id.cardMistakes)
+        tvMistakeCount = view.findViewById(R.id.tvMistakeCount)
         tvReviewDueCount = view.findViewById(R.id.tvReviewDueCount)
 
         tvUserEmail.text = auth.currentUser?.email ?: ""
@@ -103,6 +107,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         cardReviewDue.setOnClickListener {
             startActivity(Intent(requireContext(), ReviewFlashcardsActivity::class.java))
+        }
+        cardMistakes.setOnClickListener {
+            startActivity(Intent(requireContext(), MistakeQuizActivity::class.java))
         }
 
         // Home screen এ প্রথমবার আসার সময়ও data load করো
@@ -162,6 +169,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 tvReviewDueCount.text = "$count flashcard${if (count == 1) "" else "s"} to review"
             } else {
                 cardReviewDue.visibility = View.GONE
+            }
+        }
+        // ---- Mistake Journal ----
+        MistakeHelper.getMistakeCount { count ->
+            if (count > 0) {
+                cardMistakes.visibility = View.VISIBLE
+                tvMistakeCount.text = "$count mistake${if (count == 1) "" else "s"} to revise"
+            } else {
+                cardMistakes.visibility = View.GONE
             }
         }
     }
